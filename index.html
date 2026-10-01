@@ -101,7 +101,7 @@
                     <button id="btn-music-toggle" class="cyber-btn text-pink-400 hover:text-white font-mono text-xs px-1" title="Musica">
                         🎵 <span id="hud-track-name" class="hidden sm:inline text-[10px] text-gray-300 font-bold">1: Retro Arcade</span>
                     </button>
-                    <button id="btn-next-track" class="cyber-btn text-xs text-pink-400 hover:text-white px-1" title="Traccia Successiva">⏭️</button>
+                    <button id="btn-next-track" class="cyber-btn text-xs text-pink-400 hover:text-white px-1" title="Traccia Successiva">⏭️️</button>
                 </div>
                 <button id="btn-pause" class="cyber-btn cyber-glass p-2 rounded border border-cyan-500/40 hover:border-cyan-400 text-cyan-400 transition hidden" title="Pausa">⏸️</button>
             </div>
@@ -158,7 +158,7 @@
                     <div class="bg-gray-950/80 border border-yellow-500/40 p-3 rounded-lg font-mono text-xs">
                         <div class="text-yellow-400 font-bold font-orbitron text-[11px] mb-1 flex justify-between">
                             <span data-i18n="daily_challenges">🎯 DAILY CHALLENGES</span>
-                            <span class="text-gray-400 text-[10px]" data-i18n="resets_daily">RESETS DAILY</span>
+                            <span id="daily-timer" class="text-gray-400 text-[10px]">ROTATING</span>
                         </div>
                         <div id="daily-challenges-list" class="space-y-1 text-gray-300"></div>
                     </div>
@@ -230,7 +230,7 @@
                             <p class="text-gray-300" data-i18n="controls_desc">Usa le frecce o WASD. Tieni SPAZIO per rallentare il tempo. Premi P per la pausa.</p>
                         </div>
                         <div class="bg-gray-900/80 p-3 rounded border border-purple-500/30">
-                            <h4 class="text-purple-300 font-orbitron font-bold text-sm mb-2" data-i18n="modes_title">🕹️️ REGOLA DI CRESCITA & VITTORIA</h4>
+                            <h4 class="text-purple-300 font-orbitron font-bold text-sm mb-2" data-i18n="modes_title">🕹️ REGOLA DI CRESCITA & VITTORIA</h4>
                             <p class="text-gray-300 mb-2">Ogni volta che il serpentino mangia un blocchetto di cibo, si allunga di un blocco! Se riempi interamente la griglia di gioco senza sbagliare, vinci la partita!</p>
                         </div>
                     </div>
@@ -349,7 +349,7 @@
                 subtitle: "EVOLUTION GRID SIMULATION",
                 select_mode: "SELEZIONA MODALITÀ",
                 daily_challenges: "🎯 SFIDE GIORNALIERE",
-                resets_daily: "AGGIORNAMENTO GIORNALIERO",
+                resets_daily: "ROTANTI OGNI GIORNO",
                 launch_sim: "AVVIA SIMULAZIONE",
                 guide_btn: "📖 GUIDA",
                 shop_btn: "🛒 SHOP",
@@ -389,7 +389,7 @@
                 subtitle: "EVOLUTION GRID SIMULATION",
                 select_mode: "SELECT SIMULATION MODE",
                 daily_challenges: "🎯 DAILY CHALLENGES",
-                resets_daily: "RESETS DAILY",
+                resets_daily: "ROTATES DAILY",
                 launch_sim: "LAUNCH SIMULATION",
                 guide_btn: "📖 GUIDE",
                 shop_btn: "🛒 SHOP",
@@ -446,8 +446,43 @@
             { id: 'combo_5', title: 'Re delle Combo', desc: 'Ottieni una combo 5x', target: 5, type: 'combo', unlocked: false, reward: 100 }
         ];
 
+        // Pool di sfide giornaliere a rotazione
+        const ALL_DAILY_POOL = [
+            { id: 'd_score', textIt: 'Raggiungi 1,500 punti in una partita', textEn: 'Reach 1,500 points in a run', target: 1500, type: 'score', reward: 60 },
+            { id: 'd_combo', textIt: 'Ottieni una combo 4x o superiore', textEn: 'Achieve a 4x or higher combo', target: 4, type: 'combo', reward: 75 },
+            { id: 'd_len', textIt: 'Fai crescere il serpente a lunghezza 25', textEn: 'Grow snake to length 25', target: 25, type: 'length', reward: 80 },
+            { id: 'd_gold', textIt: 'Raccogli almeno 1 cubo dorato', textEn: 'Collect at least 1 golden food', target: 1, type: 'golden', reward: 100 }
+        ];
+
+        let activeDailyChallenges = [];
+        let sessionGoldenCount = 0;
+
         let currentLang = 'it';
         let selectedSkin = 'cyber';
+
+        function initDailyChallenges() {
+            const todayStr = new Date().toISOString().slice(0, 10);
+            const savedDate = localStorage.getItem('snk2027_daily_date');
+            const savedPool = localStorage.getItem('snk2027_daily_pool');
+
+            if (savedDate === todayStr && savedPool) {
+                try {
+                    activeDailyChallenges = JSON.parse(savedPool);
+                } catch(e) {
+                    generateNewDaily(todayStr);
+                }
+            } else {
+                generateNewDaily(todayStr);
+            }
+        }
+
+        function generateNewDaily(todayStr) {
+            // Seleziona casualmente 2 sfide dal pool
+            let shuffled = [...ALL_DAILY_POOL].sort(() => 0.5 - Math.random());
+            activeDailyChallenges = shuffled.slice(0, 2).map(c => ({ ...c, completed: false }));
+            localStorage.setItem('snk2027_daily_date', todayStr);
+            localStorage.setItem('snk2027_daily_pool', JSON.stringify(activeDailyChallenges));
+        }
 
         function setLanguage(lang) {
             currentLang = lang;
@@ -465,6 +500,7 @@
                 }
             });
             localStorage.setItem('snk2027_lang', lang);
+            renderDailyChallenges();
         }
 
         class WebAudioSynth {
@@ -596,12 +632,13 @@
             canvas = document.getElementById('game-canvas');
             ctx = canvas.getContext('2d');
             loadSaveData();
+            initDailyChallenges();
             resizeCanvas();
             renderSkinsPicker();
             renderAchievements();
+            renderDailyChallenges();
             setupControls();
             setupUIEvents();
-            renderDailyChallenges();
             renderShop();
             requestAnimationFrame(renderLoop);
         });
@@ -637,6 +674,7 @@
             localStorage.setItem('snk2027_skin', selectedSkin);
             localStorage.setItem('snk2027_lang', currentLang);
             localStorage.setItem('snk2027_ach', JSON.stringify(ACHIEVEMENTS_DEF));
+            localStorage.setItem('snk2027_daily_pool', JSON.stringify(activeDailyChallenges));
         }
 
         function updateNavStats() {
@@ -646,6 +684,7 @@
             const xpForNext = userLevel * 200;
             document.getElementById('nav-xp-bar').style.width = `${Math.min(100, (userXP / xpForNext) * 100)}%`;
             checkAchievements();
+            checkDailyProgress();
         }
 
         function addCoinsAndXP(earnedCoins, earnedXP) {
@@ -669,6 +708,28 @@
                 }
             });
             renderAchievements();
+        }
+
+        function checkDailyProgress() {
+            activeDailyChallenges.forEach(ach => {
+                if (!ach.completed) {
+                    if (ach.type === 'score' && score >= ach.target) {
+                        ach.completed = true;
+                        userCoins += ach.reward;
+                    } else if (ach.type === 'combo' && maxComboReached >= ach.target) {
+                        ach.completed = true;
+                        userCoins += ach.reward;
+                    } else if (ach.type === 'length' && snake.length >= ach.target) {
+                        ach.completed = true;
+                        userCoins += ach.reward;
+                    } else if (ach.type === 'golden' && sessionGoldenCount >= ach.target) {
+                        ach.completed = true;
+                        userCoins += ach.reward;
+                    }
+                }
+            });
+            saveGameData();
+            renderDailyChallenges();
         }
 
         function resizeCanvas() {
@@ -703,6 +764,19 @@
                 const row = document.createElement('div');
                 row.className = `p-2 rounded border flex justify-between items-center ${ach.unlocked ? 'bg-emerald-950/40 border-emerald-500/50 text-emerald-300' : 'bg-gray-900/60 border-gray-800 text-gray-400'}`;
                 row.innerHTML = `<div><div class="font-bold font-orbitron">${ach.title}</div><div class="text-[10px] opacity-80">${ach.desc}</div></div><div class="font-bold">${ach.unlocked ? '✅ COMPLETO' : '+' + ach.reward + ' ⚡'}</div>`;
+                container.appendChild(row);
+            });
+        }
+
+        function renderDailyChallenges() {
+            const container = document.getElementById('daily-challenges-list');
+            if(!container) return;
+            container.innerHTML = '';
+            activeDailyChallenges.forEach(c => {
+                let text = currentLang === 'en' ? c.textEn : c.textIt;
+                const row = document.createElement('div');
+                row.className = `flex justify-between items-center text-[11px] p-1.5 rounded border ${c.completed ? 'bg-emerald-950/40 border-emerald-500/50 text-emerald-300' : 'bg-gray-900/60 border-gray-800 text-gray-300'}`;
+                row.innerHTML = `<span>${text}</span><span class="font-bold">${c.completed ? '✅' : '+' + c.reward + ' ⚡'}</span>`;
                 container.appendChild(row);
             });
         }
@@ -860,6 +934,7 @@
             snake = [{ x: 12, y: 12 }, { x: 11, y: 12 }, { x: 10, y: 12 }];
             dir = { x: 1, y: 0 }; nextDir = { x: 1, y: 0 };
             score = 0; combo = 1; comboTimer = 0; maxComboReached = 1;
+            sessionGoldenCount = 0;
             slowMoEnergy = 100; currentTickDelay = (gameMode === 'overdrive') ? 90 : 160;
             foods = []; particles = []; trailParticles = [];
             goldenFood = null; goldenFoodTimer = 0;
@@ -912,10 +987,11 @@
                 if (goldenFoodTimer <= 0) goldenFood = null;
                 else if (Math.round(goldenFood.x) === head.x && Math.round(goldenFood.y) === head.y) {
                     score += 500;
+                    sessionGoldenCount++;
                     addCoinsAndXP(20, 30);
                     audio.playEat(1.5, true);
                     goldenFood = null;
-                    ateFood = true; // Allunga anche col golden food
+                    ateFood = true;
                 }
             } else if (Math.random() < 0.08 && foods.length > 0) {
                 goldenFood = { x: Math.floor(Math.random() * gridCols), y: Math.floor(Math.random() * gridRows) };
@@ -924,9 +1000,8 @@
 
             snake.unshift(head);
             if (!ateFood) {
-                snake.pop(); // Se non ha mangiato, rimuove la coda (mantiene la lunghezza)
+                snake.pop();
             } else {
-                // Se ha mangiato, controlliamo se la griglia è completamente piena (Condizione di Vittoria)
                 if (snake.length >= gridCols * gridRows) {
                     triggerGameOver('GRID FULLY CONQUERED', true);
                     return;
@@ -934,6 +1009,7 @@
                 spawnFood();
             }
 
+            checkDailyProgress();
             updateHUD();
         }
 
@@ -1049,17 +1125,6 @@
             ctx.shadowBlur = 15;
             ctx.fillRect(goldenFood.x * cellSize + 2, goldenFood.y * cellSize + 2, cellSize - 4, cellSize - 4);
             ctx.shadowBlur = 0;
-        }
-
-        function renderDailyChallenges() {
-            const container = document.getElementById('daily-challenges-list');
-            container.innerHTML = '';
-            [{ text: 'Reach 2,000 Points', reward: 50 }, { text: 'Achieve a 5x Combo', reward: 75 }].forEach(c => {
-                const row = document.createElement('div');
-                row.className = 'flex justify-between items-center text-[11px] bg-gray-900/60 p-1.5 rounded';
-                row.innerHTML = `<span>${c.text}</span><span class="text-yellow-400 font-bold">+${c.reward} ⚡</span>`;
-                container.appendChild(row);
-            });
         }
 
         function renderShop() {
