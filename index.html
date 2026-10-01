@@ -70,7 +70,6 @@
             40%, 60% { transform: translate3d(4px, -1px, 0); }
         }
 
-        /* Ottimizzazione specifica smartphone per spaziature responsive */
         @media (max-width: 640px) {
             #app-container { padding: 4px !important; justify-content: space-between !important; }
             header { padding: 6px 10px !important; margin-bottom: 4px !important; }
@@ -87,7 +86,7 @@
     <div id="scanline-overlay"></div>
     <div class="pointer-events-none absolute inset-0 z-30 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-transparent via-black/20 to-black/70"></div>
     
-    <!-- Splash Screen (Caricamento Iniziale) -->
+    <!-- Splash Screen -->
     <div id="screen-splash" class="screen-overlay absolute inset-0 z-50 flex flex-col items-center justify-center bg-gray-950 p-4 transition-opacity duration-700">
         <div class="text-center flex flex-col items-center">
             <h1 class="text-4xl sm:text-6xl font-black font-orbitron tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-pink-500 to-yellow-300 mb-2">
@@ -101,7 +100,7 @@
                 <div class="absolute bottom-0 right-0 w-4 h-4 bg-yellow-400 rounded-sm shadow-[0_0_10px_#facc15]"></div>
                 <div class="absolute bottom-0 left-0 w-4 h-4 bg-purple-500 rounded-sm shadow-[0_0_10px_#a855f7]"></div>
             </div>
-            <div class="text-xs font-mono text-gray-400 animate-pulse" data-i18n="loading_text">LOADING NEURAL LINK...</div>
+            <div class="text-xs font-mono text-gray-400 animate-pulse" data-i18n="loading_text">CARICAMENTO...</div>
         </div>
     </div>
 
@@ -182,8 +181,9 @@
                 <div class="w-full max-w-md flex flex-col gap-2 sm:gap-3">
                     <div>
                         <label class="block text-[10px] sm:text-[11px] font-orbitron tracking-widest mb-1 opacity-80" data-i18n="select_mode">SELECT SIMULATION MODE</label>
-                        <div class="grid grid-cols-3 gap-1.5 sm:gap-2">
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-1.5 sm:gap-2">
                             <button data-mode="classic" class="mode-btn cyber-btn bg-cyan-950/70 border border-cyan-500 text-cyan-300 p-1.5 sm:p-2 text-[10px] sm:text-xs font-orbitron font-bold rounded">CLASSIC</button>
+                            <button data-mode="levels" class="mode-btn cyber-btn bg-gray-900/70 border border-gray-700 text-gray-400 p-1.5 sm:p-2 text-[10px] sm:text-xs font-orbitron font-bold rounded">LEVELS</button>
                             <button data-mode="overdrive" class="mode-btn cyber-btn bg-gray-900/70 border border-gray-700 text-gray-400 p-1.5 sm:p-2 text-[10px] sm:text-xs font-orbitron font-bold rounded">OVERDRIVE</button>
                             <button data-mode="survival" class="mode-btn cyber-btn bg-gray-900/70 border border-gray-700 text-gray-400 p-1.5 sm:p-2 text-[10px] sm:text-xs font-orbitron font-bold rounded">SURVIVAL</button>
                         </div>
@@ -223,7 +223,7 @@
                         </div>
                         <div class="bg-gray-900/80 p-2.5 rounded border border-yellow-500/30">
                             <h4 class="text-yellow-400 font-orbitron font-bold mb-1">2. CRESCITA E VITTORIA</h4>
-                            <p>Ogni mela/nodo mangiato allunga il tuo corpo di un blocco esatto. Se riesci a coprire ogni singolo slot della griglia senza schiantarti, completi la simulazione con successo!</p>
+                            <p>Ogni mela/nodo mangiato allunga il tuo corpo di un blocco esatto. Se riesci a coprire ogni singolo slot della griglia senza schiantarti, completi la simulazione!</p>
                         </div>
                         <div class="bg-gray-900/80 p-2.5 rounded border border-pink-500/30">
                             <h4 class="text-pink-400 font-orbitron font-bold mb-1">3. POTERE SLOW-MO</h4>
@@ -385,9 +385,8 @@
             </div>
         </main>
 
-        <!-- Touch Controls Moderni per Smartphone (Ottimizzati e ben distanziati) -->
+        <!-- Touch Controls Moderni per Smartphone -->
         <footer id="mobile-controls" class="w-full h-28 sm:hidden flex justify-between items-center px-3 gap-2 z-20">
-            <!-- Modern Cyber D-Pad -->
             <div class="relative w-24 h-24 grid grid-cols-3 grid-rows-3 gap-0.5 p-1 bg-gray-950/90 rounded-full border border-cyan-500/40 shadow-[0_0_15px_rgba(0,240,255,0.15)]">
                 <div></div>
                 <button id="btn-touch-up" class="cyber-btn cyber-glass rounded-t-lg flex items-center justify-center text-cyan-400 active:bg-cyan-500/40 font-bold text-xs">▲</button>
@@ -399,7 +398,6 @@
                 <button id="btn-touch-down" class="cyber-btn cyber-glass rounded-b-lg flex items-center justify-center text-cyan-400 active:bg-cyan-500/40 font-bold text-xs">▼</button>
                 <div></div>
             </div>
-            <!-- Ergonomic Slow-Mo Button -->
             <div class="flex-1 h-24 flex justify-end items-center pr-1">
                 <button id="btn-touch-slomo" class="w-20 h-20 rounded-full cyber-glass border-2 border-pink-500 flex flex-col items-center justify-center text-pink-400 active:bg-pink-500/50 font-orbitron font-bold text-xs shadow-[0_0_15px_rgba(255,113,206,0.3)]">
                     <span class="tracking-widest text-[10px]">SLOW</span>
@@ -481,7 +479,7 @@
                 sfx_vol: "SFX VOLUME:",
                 shop_title: "🛒 PERK UPGRADE SHOP",
                 guide_title: "📖 GUIDE & RULES",
-                settings_title: "⚙️️ SETTINGS & THEMES",
+                settings_title: "⚙ SETTINGS & THEMES",
                 controls_title: "🎮 GAME CONTROLS",
                 controls_desc: "Use arrow keys or WASD. Hold SPACEBAR to activate Slow-Mo. Press P to pause.",
                 modes_title: "🕹️ GROWTH & VICTORY RULE",
@@ -522,6 +520,7 @@
         let recentScores = [];
         let currentLang = 'it';
         let selectedSkin = 'cyber';
+        let currentGridLevel = 20; // Inizia da 20x20 in modalità levels
 
         function initChallenges() {
             const saved = localStorage.getItem('snk2027_escalating_challenges');
@@ -1065,11 +1064,32 @@
 
         function startNewGame() {
             audio.init(); audio.startMusic();
-            snake = [{ x: 12, y: 12 }, { x: 11, y: 12 }, { x: 10, y: 12 }];
+            if (gameMode === 'levels') {
+                currentGridLevel = 20; // Inizia da 20x20
+            } else {
+                currentGridLevel = 26;
+            }
+            gridCols = currentGridLevel;
+            gridRows = currentGridLevel;
+            resizeCanvas();
+
+            let startX = Math.floor(gridCols / 2);
+            let startY = Math.floor(gridRows / 2);
+            snake = [{ x: startX, y: startY }, { x: startX - 1, y: startY }, { x: startX - 2, y: startY }];
             dir = { x: 1, y: 0 }; nextDir = { x: 1, y: 0 };
             score = 0; combo = 1; comboTimer = 0; maxComboReached = 1;
             sessionGoldenCount = 0;
-            slowMoEnergy = 100; currentTickDelay = (gameMode === 'overdrive') ? 90 : 160;
+            slowMoEnergy = 100; 
+            
+            // Velocità iniziale comoda e graduale a seconda della modalità
+            if (gameMode === 'levels') {
+                currentTickDelay = 180; // Più lento all'inizio del primo livello
+            } else if (gameMode === 'overdrive') {
+                currentTickDelay = 90;
+            } else {
+                currentTickDelay = 160;
+            }
+
             foods = []; particles = []; trailParticles = [];
             goldenFood = null; goldenFoodTimer = 0;
             spawnFood();
@@ -1080,10 +1100,12 @@
 
         function gameStep() {
             if (gameState === 'PLAYING') updateGameLogic();
-            const speedFactor = Math.min(1.0, score / 3500);
-            let baseDelay = (gameMode === 'overdrive') ? 90 : 160;
-            currentTickDelay = baseDelay - (speedFactor * 70);
             let delay = currentTickDelay;
+            if (gameMode !== 'levels') {
+                const speedFactor = Math.min(1.0, score / 3500);
+                let baseDelay = (gameMode === 'overdrive') ? 90 : 160;
+                delay = baseDelay - (speedFactor * 70);
+            }
             if (isSlowMoActive && slowMoEnergy > 5) delay *= 1.85;
             gameStepTimeout = setTimeout(gameStep, delay);
         }
@@ -1148,8 +1170,27 @@
                 snake.pop();
             } else {
                 if (snake.length >= gridCols * gridRows) {
-                    triggerGameOver('GRID FULLY CONQUERED', true);
-                    return;
+                    if (gameMode === 'levels' && currentGridLevel < 30) {
+                        currentGridLevel += 2; // Aumenta la griglia di livello in livello fino a 30x30
+                        gridCols = currentGridLevel;
+                        gridRows = currentGridLevel;
+                        resizeCanvas();
+                        
+                        // Incremento progressivo della velocità controllato e non troppo repentino
+                        currentTickDelay = Math.max(95, currentTickDelay - 12);
+
+                        let startX = Math.floor(gridCols / 2);
+                        let startY = Math.floor(gridRows / 2);
+                        snake = [{ x: startX, y: startY }, { x: startX - 1, y: startY }, { x: startX - 2, y: startY }];
+                        dir = { x: 1, y: 0 }; nextDir = { x: 1, y: 0 };
+                        foods = [];
+                        spawnFood();
+                        audio.playEat(2.0, true);
+                        return;
+                    } else {
+                        triggerGameOver('GRID FULLY CONQUERED', true);
+                        return;
+                    }
                 }
                 spawnFood();
             }
