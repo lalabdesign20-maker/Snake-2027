@@ -56,6 +56,12 @@
         .screen-overlay { display: flex; pointer-events: auto; }
         .screen-overlay.hidden { display: none !important; pointer-events: none; }
 
+        @keyframes spin-slow {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .loading-snake { animation: spin-slow 2s linear infinite; }
+
         .shake { animation: shake 0.2s cubic-bezier(.36,.07,.19,.97) both; }
         @keyframes shake {
             10%, 90% { transform: translate3d(-2px, 1px, 0); }
@@ -72,6 +78,25 @@
     <div id="scanline-overlay"></div>
     <div class="pointer-events-none absolute inset-0 z-30 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-transparent via-black/20 to-black/70"></div>
     
+    <!-- Splash Screen (Caricamento Iniziale) -->
+    <div id="screen-splash" class="screen-overlay absolute inset-0 z-50 flex flex-col items-center justify-center bg-gray-950 p-4 transition-opacity duration-700">
+        <div class="text-center flex flex-col items-center">
+            <h1 class="text-4xl sm:text-6xl font-black font-orbitron tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-pink-500 to-yellow-300 mb-2">
+                SNAKE 2027
+            </h1>
+            <p class="text-xs font-mono tracking-widest text-pink-400 mb-8 uppercase">A Game by <span class="text-cyan-300 font-bold text-sm">LALAB</span></p>
+            
+            <!-- Serpentino di Caricamento -->
+            <div class="relative w-16 h-16 mb-6 loading-snake">
+                <div class="absolute top-0 left-0 w-4 h-4 bg-cyan-400 rounded-sm shadow-[0_0_10px_#00f0ff]"></div>
+                <div class="absolute top-0 right-0 w-4 h-4 bg-pink-500 rounded-sm shadow-[0_0_10px_#ff007f]"></div>
+                <div class="absolute bottom-0 right-0 w-4 h-4 bg-yellow-400 rounded-sm shadow-[0_0_10px_#facc15]"></div>
+                <div class="absolute bottom-0 left-0 w-4 h-4 bg-purple-500 rounded-sm shadow-[0_0_10px_#a855f7]"></div>
+            </div>
+            <div class="text-xs font-mono text-gray-400 animate-pulse" data-i18n="loading_text">LOADING NEURAL LINK...</div>
+        </div>
+    </div>
+
     <div id="app-container" class="relative w-full max-w-5xl h-full max-h-[960px] p-2 sm:p-4 flex flex-col justify-between items-center z-10">
         
         <!-- Header -->
@@ -101,7 +126,7 @@
                     <button id="btn-music-toggle" class="cyber-btn text-pink-400 hover:text-white font-mono text-xs px-1" title="Musica">
                         🎵 <span id="hud-track-name" class="hidden sm:inline text-[10px] text-gray-300 font-bold">1: Retro Arcade</span>
                     </button>
-                    <button id="btn-next-track" class="cyber-btn text-xs text-pink-400 hover:text-white px-1" title="Traccia Successiva">⏭️️</button>
+                    <button id="btn-next-track" class="cyber-btn text-xs text-pink-400 hover:text-white px-1" title="Traccia Successiva">⏭️</button>
                 </div>
                 <button id="btn-pause" class="cyber-btn cyber-glass p-2 rounded border border-cyan-500/40 hover:border-cyan-400 text-cyan-400 transition hidden" title="Pausa">⏸️</button>
             </div>
@@ -139,14 +164,14 @@
             </div>
 
             <!-- Main Menu -->
-            <div id="screen-main-menu" class="screen-overlay absolute inset-0 z-30 flex flex-col items-center justify-center p-4 cyber-glass rounded-lg overflow-y-auto">
-                <div class="text-center mb-4">
+            <div id="screen-main-menu" class="screen-overlay absolute inset-0 z-30 flex flex-col items-center justify-center p-4 cyber-glass rounded-lg overflow-y-auto hidden">
+                <div class="text-center mb-3">
                     <h1 class="text-4xl sm:text-6xl font-black font-orbitron tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-pink-500 to-yellow-300 mb-1">
                         SNAKE 2027
                     </h1>
                     <p class="text-xs sm:text-sm tracking-widest font-mono opacity-80" data-i18n="subtitle">EVOLUTION GRID SIMULATION</p>
                 </div>
-                <div class="w-full max-w-md flex flex-col gap-3">
+                <div class="w-full max-w-md flex flex-col gap-2.5">
                     <div>
                         <label class="block text-[11px] font-orbitron tracking-widest mb-1 opacity-80" data-i18n="select_mode">SELECT SIMULATION MODE</label>
                         <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
@@ -155,20 +180,48 @@
                             <button data-mode="survival" class="mode-btn cyber-btn bg-gray-900/70 border border-gray-700 text-gray-400 p-2 text-xs font-orbitron font-bold rounded">ROGUE SURVIVAL</button>
                         </div>
                     </div>
-                    <div class="bg-gray-950/80 border border-yellow-500/40 p-3 rounded-lg font-mono text-xs">
+                    <div class="bg-gray-950/80 border border-yellow-500/40 p-2.5 rounded-lg font-mono text-xs">
                         <div class="text-yellow-400 font-bold font-orbitron text-[11px] mb-1 flex justify-between">
-                            <span data-i18n="daily_challenges">🎯 DAILY CHALLENGES</span>
-                            <span id="daily-timer" class="text-gray-400 text-[10px]">ROTATING</span>
+                            <span data-i18n="daily_challenges">🎯 SFIDE PROGRESSIVE</span>
+                            <span class="text-gray-400 text-[10px]">INFINITE ESCALATION</span>
                         </div>
                         <div id="daily-challenges-list" class="space-y-1 text-gray-300"></div>
                     </div>
-                    <button id="btn-start-game" class="cyber-btn w-full py-3.5 bg-gradient-to-r from-cyan-500 via-pink-500 to-yellow-400 text-gray-950 font-black font-orbitron text-base tracking-widest rounded shadow-lg hover:brightness-110" data-i18n="launch_sim">
+                    <button id="btn-start-game" class="cyber-btn w-full py-3 bg-gradient-to-r from-cyan-500 via-pink-500 to-yellow-400 text-gray-950 font-black font-orbitron text-sm tracking-widest rounded shadow-lg hover:brightness-110" data-i18n="launch_sim">
                         LAUNCH SIMULATION
+                    </button>
+                    <!-- Pulsante Tutorial Aggiunto -->
+                    <button id="btn-open-tutorial" class="cyber-btn w-full py-2.5 bg-purple-950/80 border border-purple-500 text-purple-300 font-black font-orbitron text-xs tracking-widest rounded shadow">
+                        🎓 TUTORIAL - COME GIOCARE
                     </button>
                     <div class="grid grid-cols-3 gap-2">
                         <button id="btn-open-how-to-play" class="cyber-btn py-2 bg-emerald-950/60 border border-emerald-500/50 text-emerald-300 font-orbitron text-xs rounded" data-i18n="guide_btn">📖 GUIDA</button>
                         <button id="btn-open-shop" class="cyber-btn py-2 bg-yellow-950/60 border border-yellow-500/50 text-yellow-300 font-orbitron text-xs rounded" data-i18n="shop_btn">🛒 SHOP</button>
                         <button id="btn-open-settings" class="cyber-btn py-2 bg-gray-900/80 border border-cyan-500/50 text-cyan-300 font-orbitron text-xs rounded" data-i18n="settings_btn">⚙️ SETTINGS</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tutorial Modal -->
+            <div id="modal-tutorial" class="screen-overlay absolute inset-0 z-40 flex flex-col items-center justify-center p-4 cyber-glass rounded-lg hidden">
+                <div class="w-full max-w-lg bg-gray-950/95 border border-purple-500/50 rounded-lg p-4 flex flex-col max-h-[90%] overflow-y-auto pointer-events-auto">
+                    <div class="flex justify-between items-center mb-3 border-b border-purple-500/30 pb-2">
+                        <h3 class="text-lg font-bold font-orbitron text-purple-400">🎓 ACCADEMIA PILOTI - TUTORIAL</h3>
+                        <button id="btn-close-tutorial" class="cyber-btn text-gray-400 hover:text-white font-bold text-xl px-2">&times;</button>
+                    </div>
+                    <div class="space-y-3 font-mono text-xs text-gray-200 pr-1">
+                        <div class="bg-gray-900/80 p-2.5 rounded border border-cyan-500/30">
+                            <h4 class="text-cyan-300 font-orbitron font-bold mb-1">1. MOVIMENTO E GUIDA</h4>
+                            <p>Usa i tasti freccia o WASD (oppure il D-pad touch sui dispositivi mobili) per orientare la testa del serpentino sulla griglia. Non puoi tornare direttamente sui tuoi passi.</p>
+                        </div>
+                        <div class="bg-gray-900/80 p-2.5 rounded border border-yellow-500/30">
+                            <h4 class="text-yellow-400 font-orbitron font-bold mb-1">2. CRESCITA E VITTORIA</h4>
+                            <p>Ogni mela/nodo mangiato allunga il tuo corpo di un blocco esatto e aumenta il punteggio e le combo. Se riesci a coprire ogni singolo slot della griglia senza schiantarti, completi la simulazione!</p>
+                        </div>
+                        <div class="bg-gray-900/80 p-2.5 rounded border border-pink-500/30">
+                            <h4 class="text-pink-400 font-orbitron font-bold mb-1">3. POTERE SLOW-MO</h4>
+                            <p>Tieni premuta la <b>BARRA SPAZIATRICE</b> (o il pulsante Slow-Mo tondo su mobile) per rallentare il tempo e schivare le situazioni critiche. La barra si consuma e si ricarica nel tempo.</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -189,7 +242,7 @@
                     <h2 id="game-over-title-text" class="text-3xl sm:text-4xl font-black font-orbitron text-pink-500 mb-1" data-i18n="game_over_title">RUN TERMINATED</h2>
                     <p id="game-over-reason" class="text-xs font-mono text-cyan-400">NEURAL LINK SEVERED</p>
                 </div>
-                <div class="w-full max-w-sm bg-gray-950/90 border border-cyan-500/40 p-4 rounded-lg mb-4 flex flex-col gap-1.5 font-mono text-xs">
+                <div class="w-full max-w-sm bg-gray-950/90 border border-cyan-500/40 p-4 rounded-lg mb-3 flex flex-col gap-1 font-mono text-xs">
                     <div class="flex justify-between border-b border-gray-800 pb-1">
                         <span class="text-gray-400" data-i18n="score">SCORE:</span>
                         <span id="go-score" class="text-cyan-300 font-bold font-orbitron">0</span>
@@ -211,6 +264,11 @@
                         <span id="go-combo" class="text-green-300 font-bold">1x</span>
                     </div>
                 </div>
+                <!-- Mini Leaderboard -->
+                <div class="w-full max-w-sm bg-gray-900/60 border border-pink-500/30 p-2 rounded-lg mb-3 font-mono text-[11px]">
+                    <div class="text-pink-400 font-bold font-orbitron mb-1">🏆 TOP 3 RECENT RUNS</div>
+                    <div id="local-leaderboard" class="space-y-0.5 text-gray-300"></div>
+                </div>
                 <div class="flex gap-3 w-full max-w-sm relative z-40">
                     <button id="btn-replay" class="cyber-btn flex-1 py-3 bg-gradient-to-r from-cyan-500 to-pink-500 text-gray-950 font-black font-orbitron text-xs rounded" data-i18n="reinitialize">RE-INITIALIZE</button>
                     <button id="btn-main-menu-go" class="cyber-btn flex-1 py-3 bg-gray-900 border border-cyan-500/50 text-cyan-300 font-bold font-orbitron text-xs rounded" data-i18n="main_menu">MAIN MENU</button>
@@ -227,11 +285,11 @@
                     <div class="space-y-4 font-mono text-xs text-gray-200 pr-1">
                         <div class="bg-gray-900/80 p-3 rounded border border-cyan-500/30">
                             <h4 class="text-cyan-300 font-orbitron font-bold text-sm mb-1" data-i18n="controls_title">🎮 COMANDI DI GIOCO</h4>
-                            <p class="text-gray-300" data-i18n="controls_desc">Usa le frecce o WASD. Tieni SPAZIO per rallentare il tempo. Premi P per la pausa.</p>
+                            <p class="text-gray-300" data-i18n="controls_desc">Usa le frecce o WASD. Tieni SPAZIO per attivare il rallentatore Slow-Mo (la barra si consuma e si ricarica). Premi P per la pausa.</p>
                         </div>
                         <div class="bg-gray-900/80 p-3 rounded border border-purple-500/30">
                             <h4 class="text-purple-300 font-orbitron font-bold text-sm mb-2" data-i18n="modes_title">🕹️ REGOLA DI CRESCITA & VITTORIA</h4>
-                            <p class="text-gray-300 mb-2">Ogni volta che il serpentino mangia un blocchetto di cibo, si allunga di un blocco! Se riempi interamente la griglia di gioco senza sbagliare, vinci la partita!</p>
+                            <p class="text-gray-300 mb-2">Ogni volta che il serpentino mangia un blocchetto, si allunga di un blocco. Se riempi interamente la griglia di gioco, completi la simulazione con la vittoria assoluta!</p>
                         </div>
                     </div>
                 </div>
@@ -348,8 +406,7 @@
             it: {
                 subtitle: "EVOLUTION GRID SIMULATION",
                 select_mode: "SELEZIONA MODALITÀ",
-                daily_challenges: "🎯 SFIDE GIORNALIERE",
-                resets_daily: "ROTANTI OGNI GIORNO",
+                daily_challenges: "🎯 SFIDE PROGRESSIVE",
                 launch_sim: "AVVIA SIMULAZIONE",
                 guide_btn: "📖 GUIDA",
                 shop_btn: "🛒 SHOP",
@@ -379,7 +436,7 @@
                 guide_title: "📖 GUIDA & REGOLE",
                 settings_title: "⚙️ IMPOSTAZIONI & TEMI",
                 controls_title: "🎮 COMANDI DI GIOCO",
-                controls_desc: "Usa le frecce o WASD. Tieni SPAZIO per rallentare il tempo. Premi P per la pausa.",
+                controls_desc: "Usa le frecce o WASD. Tieni SPAZIO per attivare il rallentatore Slow-Mo (la barra si consuma e si ricarica). Premi P per la pausa.",
                 modes_title: "🕹️ REGOLA DI CRESCITA & VITTORIA",
                 desc_classic: "Esperienza equilibrata con accelerazione dinamica graduale.",
                 desc_overdrive: "Velocità iniziale raddoppiata per veri professionisti.",
@@ -388,8 +445,7 @@
             en: {
                 subtitle: "EVOLUTION GRID SIMULATION",
                 select_mode: "SELECT SIMULATION MODE",
-                daily_challenges: "🎯 DAILY CHALLENGES",
-                resets_daily: "ROTATES DAILY",
+                daily_challenges: "🎯 ESCALATING CHALLENGES",
                 launch_sim: "LAUNCH SIMULATION",
                 guide_btn: "📖 GUIDE",
                 shop_btn: "🛒 SHOP",
@@ -419,7 +475,7 @@
                 guide_title: "📖 GUIDE & RULES",
                 settings_title: "⚙️ SETTINGS & THEMES",
                 controls_title: "🎮 GAME CONTROLS",
-                controls_desc: "Use arrow keys or WASD. Hold SPACEBAR to activate Slow-Mo. Press P to pause.",
+                controls_desc: "Use arrow keys or WASD. Hold SPACEBAR to activate Slow-Mo (meter drains and refills). Press P to pause.",
                 modes_title: "🕹️ GROWTH & VICTORY RULE",
                 desc_classic: "The classic and balanced Snake experience. Speed scales as you collect food.",
                 desc_overdrive: "High tension mode for experts. Starting speed is doubled.",
@@ -440,48 +496,73 @@
             { id: 'mono', name: 'Monochrome', head: '#ffffff', body: '#6b7280' }
         ];
 
+        const UPGRADES_DEF = [
+            { id: 'magnet', name: 'MAGNET RANGE', desc: 'Attira il cibo vicino alla testa.', cost: 100, level: 0, max: 5 },
+            { id: 'slomo_dur', name: 'SLOW-MO CAPACITY', desc: 'Aumenta la durata dello Slow-Mo.', cost: 150, level: 0, max: 5 },
+            { id: 'slomo', name: 'SLOW-MO RECHARGE', desc: 'Ricarica la barra più in fretta.', cost: 150, level: 0, max: 5 },
+            { id: 'multiplier', name: 'COMBO BOOST', desc: 'Estende la finestra temporale combo.', cost: 250, level: 0, max: 5 }
+        ];
+
         const ACHIEVEMENTS_DEF = [
             { id: 'score_1000', title: 'Novizio Cyber', desc: 'Raggiungi 1.000 punti', target: 1000, type: 'score', unlocked: false, reward: 50 },
             { id: 'score_5000', title: 'Veterano della Griglia', desc: 'Raggiungi 5.000 punti', target: 5000, type: 'score', unlocked: false, reward: 200 },
             { id: 'combo_5', title: 'Re delle Combo', desc: 'Ottieni una combo 5x', target: 5, type: 'combo', unlocked: false, reward: 100 }
         ];
 
-        // Pool di sfide giornaliere a rotazione
-        const ALL_DAILY_POOL = [
-            { id: 'd_score', textIt: 'Raggiungi 1,500 punti in una partita', textEn: 'Reach 1,500 points in a run', target: 1500, type: 'score', reward: 60 },
-            { id: 'd_combo', textIt: 'Ottieni una combo 4x o superiore', textEn: 'Achieve a 4x or higher combo', target: 4, type: 'combo', reward: 75 },
-            { id: 'd_len', textIt: 'Fai crescere il serpente a lunghezza 25', textEn: 'Grow snake to length 25', target: 25, type: 'length', reward: 80 },
-            { id: 'd_gold', textIt: 'Raccogli almeno 1 cubo dorato', textEn: 'Collect at least 1 golden food', target: 1, type: 'golden', reward: 100 }
-        ];
-
-        let activeDailyChallenges = [];
+        let activeChallenges = [];
         let sessionGoldenCount = 0;
-
+        let recentScores = [];
         let currentLang = 'it';
         let selectedSkin = 'cyber';
 
-        function initDailyChallenges() {
-            const todayStr = new Date().toISOString().slice(0, 10);
-            const savedDate = localStorage.getItem('snk2027_daily_date');
-            const savedPool = localStorage.getItem('snk2027_daily_pool');
-
-            if (savedDate === todayStr && savedPool) {
+        function initChallenges() {
+            const saved = localStorage.getItem('snk2027_escalating_challenges');
+            if (saved) {
                 try {
-                    activeDailyChallenges = JSON.parse(savedPool);
-                } catch(e) {
-                    generateNewDaily(todayStr);
-                }
-            } else {
-                generateNewDaily(todayStr);
+                    activeChallenges = JSON.parse(saved);
+                    return;
+                } catch(e){}
             }
+            activeChallenges = [
+                { id: 'c_score', type: 'score', target: 1000, reward: 40, completed: false, textIt: 'Raggiungi 1,000 punti', textEn: 'Reach 1,000 points' },
+                { id: 'c_len', type: 'length', target: 15, reward: 50, completed: false, textIt: 'Cresci fino a lunghezza 15', textEn: 'Grow to length 15' }
+            ];
         }
 
-        function generateNewDaily(todayStr) {
-            // Seleziona casualmente 2 sfide dal pool
-            let shuffled = [...ALL_DAILY_POOL].sort(() => 0.5 - Math.random());
-            activeDailyChallenges = shuffled.slice(0, 2).map(c => ({ ...c, completed: false }));
-            localStorage.setItem('snk2027_daily_date', todayStr);
-            localStorage.setItem('snk2027_daily_pool', JSON.stringify(activeDailyChallenges));
+        function spawnNextChallenge(completedIndex) {
+            let oldC = activeChallenges[completedIndex];
+            let newTarget, newReward, newTextIt, newTextEn, newType;
+
+            if (oldC.type === 'score') {
+                newType = 'score';
+                newTarget = oldC.target + 1500;
+                newReward = oldC.reward + 30;
+                newTextIt = `Raggiungi ${newTarget.toLocaleString()} punti`;
+                newTextEn = `Reach ${newTarget.toLocaleString()} points`;
+            } else if (oldC.type === 'length') {
+                newType = 'length';
+                newTarget = oldC.target + 10;
+                newReward = oldC.reward + 40;
+                newTextIt = `Cresci fino a lunghezza ${newTarget}`;
+                newTextEn = `Grow to length ${newTarget}`;
+            } else {
+                newType = 'score';
+                newTarget = 2000;
+                newReward = 50;
+                newTextIt = 'Raggiungi 2,000 punti';
+                newTextEn = 'Reach 2,000 points';
+            }
+
+            activeChallenges[completedIndex] = {
+                id: 'c_' + Date.now(),
+                type: newType,
+                target: newTarget,
+                reward: newReward,
+                completed: false,
+                textIt: newTextIt,
+                textEn: newTextEn
+            };
+            saveGameData();
         }
 
         function setLanguage(lang) {
@@ -610,13 +691,6 @@
             vaporwave: { bg: '#1a0933', grid: 'rgba(255, 113, 206, 0.15)', food: '#01cdfe' }
         };
 
-        const UPGRADES_DEF = [
-            { id: 'magnet', name: 'MAGNET RANGE', desc: 'Pulls nearby food nodes to head.', cost: 100, level: 0, max: 5 },
-            { id: 'slomo', name: 'SLOW-MO RECHARGE', desc: 'Recharges slow-mo meter faster.', cost: 150, level: 0, max: 5 },
-            { id: 'luck', name: 'LUCK MATRIX', desc: 'Increases spawn rate of bonus food.', cost: 200, level: 0, max: 5 },
-            { id: 'multiplier', name: 'COMBO BOOST', desc: 'Extends combo timer window.', cost: 250, level: 0, max: 5 }
-        ];
-
         let canvas, ctx;
         let gridCols = 26, gridRows = 26, cellSize = 20;
         let activeTheme = 'cartoon', gameMode = 'classic', gameState = 'MENU';
@@ -632,7 +706,7 @@
             canvas = document.getElementById('game-canvas');
             ctx = canvas.getContext('2d');
             loadSaveData();
-            initDailyChallenges();
+            initChallenges();
             resizeCanvas();
             renderSkinsPicker();
             renderAchievements();
@@ -641,6 +715,16 @@
             setupUIEvents();
             renderShop();
             requestAnimationFrame(renderLoop);
+
+            // Rimozione automatica della schermata di caricamento dopo 2.2 secondi
+            setTimeout(() => {
+                const splash = document.getElementById('screen-splash');
+                splash.style.opacity = '0';
+                setTimeout(() => {
+                    splash.style.display = 'none';
+                    showScreen('screen-main-menu');
+                }, 700);
+            }, 2200);
         });
 
         function loadSaveData() {
@@ -653,6 +737,9 @@
                 currentLang = localStorage.getItem('snk2027_lang');
                 setLanguage(currentLang);
             }
+            if (localStorage.getItem('snk2027_recent')) {
+                try { recentScores = JSON.parse(localStorage.getItem('snk2027_recent')); } catch(e){}
+            }
             const savedAch = localStorage.getItem('snk2027_ach');
             if (savedAch) {
                 try {
@@ -660,6 +747,16 @@
                     parsed.forEach(a => {
                         const target = ACHIEVEMENTS_DEF.find(x => x.id === a.id);
                         if(target) target.unlocked = a.unlocked;
+                    });
+                } catch(e){}
+            }
+            const savedUpgrades = localStorage.getItem('snk2027_upgrades');
+            if (savedUpgrades) {
+                try {
+                    const parsed = JSON.parse(savedUpgrades);
+                    parsed.forEach(u => {
+                        const target = UPGRADES_DEF.find(x => x.id === u.id);
+                        if (target) target.level = u.level;
                     });
                 } catch(e){}
             }
@@ -673,8 +770,10 @@
             localStorage.setItem('snk2027_highscore', highScore);
             localStorage.setItem('snk2027_skin', selectedSkin);
             localStorage.setItem('snk2027_lang', currentLang);
+            localStorage.setItem('snk2027_recent', JSON.stringify(recentScores));
             localStorage.setItem('snk2027_ach', JSON.stringify(ACHIEVEMENTS_DEF));
-            localStorage.setItem('snk2027_daily_pool', JSON.stringify(activeDailyChallenges));
+            localStorage.setItem('snk2027_upgrades', JSON.stringify(UPGRADES_DEF));
+            localStorage.setItem('snk2027_escalating_challenges', JSON.stringify(activeChallenges));
         }
 
         function updateNavStats() {
@@ -684,7 +783,7 @@
             const xpForNext = userLevel * 200;
             document.getElementById('nav-xp-bar').style.width = `${Math.min(100, (userXP / xpForNext) * 100)}%`;
             checkAchievements();
-            checkDailyProgress();
+            checkChallengeProgress();
         }
 
         function addCoinsAndXP(earnedCoins, earnedXP) {
@@ -710,26 +809,25 @@
             renderAchievements();
         }
 
-        function checkDailyProgress() {
-            activeDailyChallenges.forEach(ach => {
-                if (!ach.completed) {
-                    if (ach.type === 'score' && score >= ach.target) {
-                        ach.completed = true;
-                        userCoins += ach.reward;
-                    } else if (ach.type === 'combo' && maxComboReached >= ach.target) {
-                        ach.completed = true;
-                        userCoins += ach.reward;
-                    } else if (ach.type === 'length' && snake.length >= ach.target) {
-                        ach.completed = true;
-                        userCoins += ach.reward;
-                    } else if (ach.type === 'golden' && sessionGoldenCount >= ach.target) {
-                        ach.completed = true;
-                        userCoins += ach.reward;
+        function checkChallengeProgress() {
+            activeChallenges.forEach((c, index) => {
+                if (!c.completed) {
+                    let achieved = false;
+                    if (c.type === 'score' && score >= c.target) achieved = true;
+                    if (c.type === 'length' && snake.length >= c.target) achieved = true;
+
+                    if (achieved) {
+                        c.completed = true;
+                        userCoins += c.reward;
+                        saveGameData();
+                        renderDailyChallenges();
+                        setTimeout(() => {
+                            spawnNextChallenge(index);
+                            renderDailyChallenges();
+                        }, 500);
                     }
                 }
             });
-            saveGameData();
-            renderDailyChallenges();
         }
 
         function resizeCanvas() {
@@ -772,11 +870,28 @@
             const container = document.getElementById('daily-challenges-list');
             if(!container) return;
             container.innerHTML = '';
-            activeDailyChallenges.forEach(c => {
+            activeChallenges.forEach(c => {
                 let text = currentLang === 'en' ? c.textEn : c.textIt;
                 const row = document.createElement('div');
                 row.className = `flex justify-between items-center text-[11px] p-1.5 rounded border ${c.completed ? 'bg-emerald-950/40 border-emerald-500/50 text-emerald-300' : 'bg-gray-900/60 border-gray-800 text-gray-300'}`;
                 row.innerHTML = `<span>${text}</span><span class="font-bold">${c.completed ? '✅' : '+' + c.reward + ' ⚡'}</span>`;
+                container.appendChild(row);
+            });
+        }
+
+        function updateLocalLeaderboard() {
+            recentScores.push(score);
+            recentScores.sort((a,b) => b - a);
+            recentScores = recentScores.slice(0, 3);
+            saveGameData();
+            
+            const container = document.getElementById('local-leaderboard');
+            if(!container) return;
+            container.innerHTML = '';
+            recentScores.forEach((sc, idx) => {
+                const row = document.createElement('div');
+                row.className = 'flex justify-between px-1 py-0.5 border-b border-gray-800/50';
+                row.innerHTML = `<span>#${idx+1} Run</span><span class="font-bold text-cyan-300 font-orbitron">${sc}</span>`;
                 container.appendChild(row);
             });
         }
@@ -887,6 +1002,9 @@
             document.getElementById('btn-achievements').addEventListener('click', () => { renderAchievements(); document.getElementById('modal-achievements').classList.remove('hidden'); });
             document.getElementById('btn-close-achievements').addEventListener('click', () => document.getElementById('modal-achievements').classList.add('hidden'));
 
+            document.getElementById('btn-open-tutorial').addEventListener('click', () => document.getElementById('modal-tutorial').classList.remove('hidden'));
+            document.getElementById('btn-close-tutorial').addEventListener('click', () => document.getElementById('modal-tutorial').classList.add('hidden'));
+
             document.getElementById('btn-how-to-play-top').addEventListener('click', () => document.getElementById('modal-how-to-play').classList.remove('hidden'));
             document.getElementById('btn-open-how-to-play').addEventListener('click', () => document.getElementById('modal-how-to-play').classList.remove('hidden'));
             document.getElementById('btn-close-how-to-play').addEventListener('click', () => document.getElementById('modal-how-to-play').classList.add('hidden'));
@@ -957,6 +1075,17 @@
         function updateGameLogic() {
             dir = { ...nextDir };
             const head = { x: snake[0].x + dir.x, y: snake[0].y + dir.y };
+
+            const slomoCapacityPerk = UPGRADES_DEF.find(u => u.id === 'slomo_dur').level;
+            const slomoRechargePerk = UPGRADES_DEF.find(u => u.id === 'slomo').level;
+            let maxEnergy = 100 + slomoCapacityPerk * 30;
+
+            if (isSlowMoActive && slowMoEnergy > 0) {
+                slowMoEnergy = Math.max(0, slowMoEnergy - (2.2 - slomoRechargePerk * 0.2));
+            } else {
+                slowMoEnergy = Math.min(maxEnergy, slowMoEnergy + (0.5 + slomoRechargePerk * 0.15));
+            }
+
             if (head.x < 0 || head.x >= gridCols || head.y < 0 || head.y >= gridRows) {
                 triggerGameOver('BOUNDARY COLLISION', false); return;
             }
@@ -1009,7 +1138,7 @@
                 spawnFood();
             }
 
-            checkDailyProgress();
+            checkChallengeProgress();
             updateHUD();
         }
 
@@ -1040,6 +1169,8 @@
             addCoinsAndXP(coinsEarned, xpEarned);
             if (score > highScore) { highScore = score; saveGameData(); }
 
+            updateLocalLeaderboard();
+
             document.getElementById('go-score').innerText = score;
             document.getElementById('go-highscore').innerText = highScore;
             document.getElementById('go-coins').innerText = `+${coinsEarned} ⚡`;
@@ -1061,7 +1192,10 @@
 
         function updateHUD() {
             document.getElementById('hud-score').innerText = String(score).padStart(6, '0');
-            document.getElementById('hud-slomo-bar').style.width = `${slowMoEnergy}%`;
+            const slomoCapacityPerk = UPGRADES_DEF.find(u => u.id === 'slomo_dur').level;
+            let maxEnergy = 100 + slomoCapacityPerk * 30;
+            let percentage = Math.min(100, (slowMoEnergy / maxEnergy) * 100);
+            document.getElementById('hud-slomo-bar').style.width = `${percentage}%`;
         }
 
         function renderLoop() {
@@ -1103,7 +1237,7 @@
             snake.forEach((s, idx) => {
                 ctx.fillStyle = idx === 0 ? skin.head : skin.body;
                 ctx.shadowColor = skin.head;
-                ctx.shadowBlur = idx === 0 ? 10 : 3;
+                ctx.shadowBlur = (isSlowMoActive ? 20 : (idx === 0 ? 10 : 3));
                 ctx.fillRect(s.x * cellSize + 1, s.y * cellSize + 1, cellSize - 2, cellSize - 2);
                 ctx.shadowBlur = 0;
             });
