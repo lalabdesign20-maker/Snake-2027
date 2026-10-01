@@ -69,6 +69,15 @@
             30%, 50%, 70% { transform: translate3d(-4px, 2px, 0); }
             40%, 60% { transform: translate3d(4px, -1px, 0); }
         }
+
+        /* Ottimizzazione specifica smartphone per spaziature responsive */
+        @media (max-width: 640px) {
+            #app-container { padding: 4px !important; justify-content: space-between !important; }
+            header { padding: 6px 10px !important; margin-bottom: 4px !important; }
+            main { margin: 0 !important; flex: 1 !important; min-height: 0 !important; }
+            #mobile-controls { height: 110px !important; margin-top: 2px !important; }
+        }
+
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); }
         ::-webkit-scrollbar-thumb { background: #00f0ff; border-radius: 3px; }
@@ -86,7 +95,6 @@
             </h1>
             <p class="text-xs font-mono tracking-widest text-pink-400 mb-8 uppercase">A Game by <span class="text-cyan-300 font-bold text-sm">LALAB</span></p>
             
-            <!-- Serpentino di Caricamento -->
             <div class="relative w-16 h-16 mb-6 loading-snake">
                 <div class="absolute top-0 left-0 w-4 h-4 bg-cyan-400 rounded-sm shadow-[0_0_10px_#00f0ff]"></div>
                 <div class="absolute top-0 right-0 w-4 h-4 bg-pink-500 rounded-sm shadow-[0_0_10px_#ff007f]"></div>
@@ -101,12 +109,12 @@
         
         <!-- Header -->
         <header class="w-full flex justify-between items-center cyber-glass px-4 py-2 rounded-lg mb-2 z-50">
-            <div class="flex items-center gap-3">
-                <div class="text-xl sm:text-2xl font-black font-orbitron tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-pink-500 to-yellow-300">
+            <div class="flex items-center gap-2 sm:gap-3">
+                <div class="text-lg sm:text-2xl font-black font-orbitron tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-pink-500 to-yellow-300">
                     SNAKE 2027
                 </div>
-                <div class="flex items-center gap-1 bg-gray-900/80 border border-yellow-500/50 px-2 py-0.5 rounded text-xs text-yellow-300 font-mono">
-                    <span>⚡ COINS:</span>
+                <div class="flex items-center gap-1 bg-gray-900/80 border border-yellow-500/50 px-2 py-0.5 rounded text-[11px] sm:text-xs text-yellow-300 font-mono">
+                    <span>⚡:</span>
                     <span id="nav-coins" class="font-bold">0</span>
                 </div>
                 <div class="hidden md:flex items-center gap-1 bg-gray-900/80 border border-purple-500/50 px-2 py-0.5 rounded text-xs text-purple-300 font-mono">
@@ -116,19 +124,19 @@
                     </div>
                 </div>
             </div>
-            <div class="flex items-center gap-2">
-                <button id="btn-how-to-play-top" class="cyber-btn cyber-glass p-2 rounded border border-emerald-500/40 hover:border-emerald-400 text-emerald-400 transition" title="Guida">📖</button>
-                <button id="btn-settings" class="cyber-btn cyber-glass p-2 rounded border border-cyan-500/40 hover:border-cyan-400 text-cyan-400 transition" title="Impostazioni">⚙️</button>
-                <button id="btn-shop" class="cyber-btn cyber-glass p-2 rounded border border-yellow-500/40 hover:border-yellow-400 text-yellow-400 transition" title="Shop">🛒</button>
-                <button id="btn-achievements" class="cyber-btn cyber-glass p-2 rounded border border-pink-500/40 hover:border-pink-400 text-pink-400 transition" title="Trofei">🏆</button>
-                <div class="flex items-center gap-1 cyber-glass px-2 py-1 rounded border border-pink-500/40">
-                    <button id="btn-prev-track" class="cyber-btn text-xs text-pink-400 hover:text-white px-1" title="Traccia Precedente">⏮️</button>
-                    <button id="btn-music-toggle" class="cyber-btn text-pink-400 hover:text-white font-mono text-xs px-1" title="Musica">
-                        🎵 <span id="hud-track-name" class="hidden sm:inline text-[10px] text-gray-300 font-bold">1: Retro Arcade</span>
+            <div class="flex items-center gap-1.5 sm:gap-2">
+                <button id="btn-how-to-play-top" class="cyber-btn cyber-glass p-1.5 sm:p-2 rounded border border-emerald-500/40 text-emerald-400 text-xs" title="Guida">📖</button>
+                <button id="btn-settings" class="cyber-btn cyber-glass p-1.5 sm:p-2 rounded border border-cyan-500/40 text-cyan-400 text-xs" title="Impostazioni">⚙️</button>
+                <button id="btn-shop" class="cyber-btn cyber-glass p-1.5 sm:p-2 rounded border border-yellow-500/40 text-yellow-400 text-xs" title="Shop">🛒</button>
+                <button id="btn-achievements" class="cyber-btn cyber-glass p-1.5 sm:p-2 rounded border border-pink-500/40 text-pink-400 text-xs" title="Trofei">🏆</button>
+                <div class="hidden sm:flex items-center gap-1 cyber-glass px-2 py-1 rounded border border-pink-500/40">
+                    <button id="btn-prev-track" class="cyber-btn text-xs text-pink-400 px-1">⏮️</button>
+                    <button id="btn-music-toggle" class="cyber-btn text-pink-400 font-mono text-xs px-1">
+                        🎵 <span id="hud-track-name" class="text-[10px] text-gray-300 font-bold">1: Retro Arcade</span>
                     </button>
-                    <button id="btn-next-track" class="cyber-btn text-xs text-pink-400 hover:text-white px-1" title="Traccia Successiva">⏭️</button>
+                    <button id="btn-next-track" class="cyber-btn text-xs text-pink-400 px-1">⏭️</button>
                 </div>
-                <button id="btn-pause" class="cyber-btn cyber-glass p-2 rounded border border-cyan-500/40 hover:border-cyan-400 text-cyan-400 transition hidden" title="Pausa">⏸️</button>
+                <button id="btn-pause" class="cyber-btn cyber-glass p-1.5 sm:p-2 rounded border border-cyan-500/40 text-cyan-400 transition hidden text-xs" title="Pausa">⏸️</button>
             </div>
         </header>
 
@@ -138,66 +146,65 @@
                 <canvas id="game-canvas" class="cyber-glass rounded-lg shadow-2xl border border-cyan-500/30 max-w-full max-h-full aspect-square sm:aspect-auto"></canvas>
                 
                 <!-- In-Game HUD -->
-                <div id="game-hud" class="absolute top-3 left-3 right-3 flex justify-between items-start pointer-events-none hidden font-orbitron z-20">
-                    <div class="flex flex-col gap-1 bg-gray-950/80 p-2 sm:p-3 rounded border border-cyan-500/40 backdrop-blur">
-                        <div class="text-[10px] text-gray-400 uppercase tracking-widest" data-i18n="score_lbl">Score</div>
-                        <div id="hud-score" class="text-xl sm:text-3xl font-black text-cyan-300">000000</div>
+                <div id="game-hud" class="absolute top-2 left-2 right-2 sm:top-3 sm:left-3 sm:right-3 flex justify-between items-start pointer-events-none hidden font-orbitron z-20">
+                    <div class="flex flex-col gap-1 bg-gray-950/80 p-2 rounded border border-cyan-500/40 backdrop-blur">
+                        <div class="text-[9px] sm:text-[10px] text-gray-400 uppercase tracking-widest" data-i18n="score_lbl">Score</div>
+                        <div id="hud-score" class="text-base sm:text-3xl font-black text-cyan-300">000000</div>
                         <div id="hud-combo-box" class="flex items-center gap-1 text-xs text-yellow-400 hidden">
-                            <span id="hud-combo-val" class="font-bold text-sm text-pink-500 animate-pulse">2x COMBO!</span>
+                            <span id="hud-combo-val" class="font-bold text-xs sm:text-sm text-pink-500 animate-pulse">2x COMBO!</span>
                         </div>
                     </div>
                     <div id="hud-center-status" class="flex flex-col items-center gap-1">
-                        <div class="bg-gray-950/80 border border-yellow-500/50 px-3 py-1 rounded text-xs font-mono text-yellow-300 backdrop-blur flex items-center gap-1.5">
+                        <div class="bg-gray-950/80 border border-yellow-500/50 px-2.5 py-1 rounded text-[11px] sm:text-xs font-mono text-yellow-300 backdrop-blur flex items-center gap-1">
                             <span data-i18n="speed">🚀 SPEED:</span>
                             <span id="hud-speed-val" class="font-bold text-cyan-400">1.0x</span>
                         </div>
                     </div>
-                    <div class="flex flex-col items-end gap-1 bg-gray-950/80 p-2 sm:p-3 rounded border border-pink-500/40 backdrop-blur">
-                        <div class="text-[10px] text-gray-400 uppercase tracking-widest" data-i18n="record">Record</div>
-                        <div id="hud-highscore" class="text-base sm:text-xl font-bold text-pink-400">000000</div>
-                        <div class="w-24 sm:w-28 h-2 bg-gray-900 rounded-full border border-cyan-500/50 overflow-hidden mt-1">
+                    <div class="flex flex-col items-end gap-1 bg-gray-950/80 p-2 rounded border border-pink-500/40 backdrop-blur">
+                        <div class="text-[9px] sm:text-[10px] text-gray-400 uppercase tracking-widest" data-i18n="record">Record</div>
+                        <div id="hud-highscore" class="text-sm sm:text-xl font-bold text-pink-400">000000</div>
+                        <div class="w-20 sm:w-28 h-1.5 sm:h-2 bg-gray-900 rounded-full border border-cyan-500/50 overflow-hidden mt-1">
                             <div id="hud-slomo-bar" class="h-full bg-gradient-to-r from-cyan-400 to-pink-500 w-full transition-all duration-75"></div>
                         </div>
-                        <span class="text-[9px] text-cyan-400 font-mono">SLOW-MO [SPACE]</span>
+                        <span class="text-[8px] sm:text-[9px] text-cyan-400 font-mono">SLOW-MO [SPACE]</span>
                     </div>
                 </div>
             </div>
 
             <!-- Main Menu -->
-            <div id="screen-main-menu" class="screen-overlay absolute inset-0 z-30 flex flex-col items-center justify-center p-4 cyber-glass rounded-lg overflow-y-auto hidden">
-                <div class="text-center mb-3">
-                    <h1 class="text-4xl sm:text-6xl font-black font-orbitron tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-pink-500 to-yellow-300 mb-1">
+            <div id="screen-main-menu" class="screen-overlay absolute inset-0 z-30 flex flex-col items-center justify-center p-3 sm:p-4 cyber-glass rounded-lg overflow-y-auto hidden">
+                <div class="text-center mb-2 sm:mb-4">
+                    <h1 class="text-3xl sm:text-6xl font-black font-orbitron tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-pink-500 to-yellow-300 mb-1">
                         SNAKE 2027
                     </h1>
-                    <p class="text-xs sm:text-sm tracking-widest font-mono opacity-80" data-i18n="subtitle">EVOLUTION GRID SIMULATION</p>
+                    <p class="text-[10px] sm:text-sm tracking-widest font-mono opacity-80" data-i18n="subtitle">EVOLUTION GRID SIMULATION</p>
                 </div>
-                <div class="w-full max-w-md flex flex-col gap-2.5">
+                <div class="w-full max-w-md flex flex-col gap-2 sm:gap-3">
                     <div>
-                        <label class="block text-[11px] font-orbitron tracking-widest mb-1 opacity-80" data-i18n="select_mode">SELECT SIMULATION MODE</label>
-                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                            <button data-mode="classic" class="mode-btn cyber-btn bg-cyan-950/70 border border-cyan-500 text-cyan-300 p-2 text-xs font-orbitron font-bold rounded">CLASSIC 2027</button>
-                            <button data-mode="overdrive" class="mode-btn cyber-btn bg-gray-900/70 border border-gray-700 text-gray-400 p-2 text-xs font-orbitron font-bold rounded">OVERDRIVE</button>
-                            <button data-mode="survival" class="mode-btn cyber-btn bg-gray-900/70 border border-gray-700 text-gray-400 p-2 text-xs font-orbitron font-bold rounded">ROGUE SURVIVAL</button>
+                        <label class="block text-[10px] sm:text-[11px] font-orbitron tracking-widest mb-1 opacity-80" data-i18n="select_mode">SELECT SIMULATION MODE</label>
+                        <div class="grid grid-cols-3 gap-1.5 sm:gap-2">
+                            <button data-mode="classic" class="mode-btn cyber-btn bg-cyan-950/70 border border-cyan-500 text-cyan-300 p-1.5 sm:p-2 text-[10px] sm:text-xs font-orbitron font-bold rounded">CLASSIC</button>
+                            <button data-mode="overdrive" class="mode-btn cyber-btn bg-gray-900/70 border border-gray-700 text-gray-400 p-1.5 sm:p-2 text-[10px] sm:text-xs font-orbitron font-bold rounded">OVERDRIVE</button>
+                            <button data-mode="survival" class="mode-btn cyber-btn bg-gray-900/70 border border-gray-700 text-gray-400 p-1.5 sm:p-2 text-[10px] sm:text-xs font-orbitron font-bold rounded">SURVIVAL</button>
                         </div>
                     </div>
-                    <div class="bg-gray-950/80 border border-yellow-500/40 p-2.5 rounded-lg font-mono text-xs">
-                        <div class="text-yellow-400 font-bold font-orbitron text-[11px] mb-1 flex justify-between">
+                    <div class="bg-gray-950/80 border border-yellow-500/40 p-2 sm:p-2.5 rounded-lg font-mono text-xs">
+                        <div class="text-yellow-400 font-bold font-orbitron text-[10px] sm:text-[11px] mb-1 flex justify-between">
                             <span data-i18n="daily_challenges">🎯 SFIDE PROGRESSIVE</span>
-                            <span class="text-gray-400 text-[10px]">INFINITE ESCALATION</span>
+                            <span class="text-gray-400 text-[9px]">ESCALATION</span>
                         </div>
                         <div id="daily-challenges-list" class="space-y-1 text-gray-300"></div>
                     </div>
-                    <button id="btn-start-game" class="cyber-btn w-full py-3 bg-gradient-to-r from-cyan-500 via-pink-500 to-yellow-400 text-gray-950 font-black font-orbitron text-sm tracking-widest rounded shadow-lg hover:brightness-110" data-i18n="launch_sim">
+                    <button id="btn-start-game" class="cyber-btn w-full py-2.5 sm:py-3 bg-gradient-to-r from-cyan-500 via-pink-500 to-yellow-400 text-gray-950 font-black font-orbitron text-xs sm:text-sm tracking-widest rounded shadow-lg hover:brightness-110" data-i18n="launch_sim">
                         LAUNCH SIMULATION
                     </button>
-                    <!-- Pulsante Tutorial Aggiunto -->
-                    <button id="btn-open-tutorial" class="cyber-btn w-full py-2.5 bg-purple-950/80 border border-purple-500 text-purple-300 font-black font-orbitron text-xs tracking-widest rounded shadow">
+                    <button id="btn-open-tutorial" class="cyber-btn w-full py-2 sm:py-2.5 bg-purple-950/80 border border-purple-500 text-purple-300 font-black font-orbitron text-[11px] sm:text-xs tracking-widest rounded shadow">
                         🎓 TUTORIAL - COME GIOCARE
                     </button>
-                    <div class="grid grid-cols-3 gap-2">
-                        <button id="btn-open-how-to-play" class="cyber-btn py-2 bg-emerald-950/60 border border-emerald-500/50 text-emerald-300 font-orbitron text-xs rounded" data-i18n="guide_btn">📖 GUIDA</button>
-                        <button id="btn-open-shop" class="cyber-btn py-2 bg-yellow-950/60 border border-yellow-500/50 text-yellow-300 font-orbitron text-xs rounded" data-i18n="shop_btn">🛒 SHOP</button>
-                        <button id="btn-open-settings" class="cyber-btn py-2 bg-gray-900/80 border border-cyan-500/50 text-cyan-300 font-orbitron text-xs rounded" data-i18n="settings_btn">⚙️ SETTINGS</button>
+                    <div class="grid grid-cols-3 gap-1.5 sm:gap-2">
+                        <button id="btn-open-how-to-play" class="cyber-btn py-1.5 sm:py-2 bg-emerald-950/60 border border-emerald-500/50 text-emerald-300 font-orbitron text-[11px] sm:text-xs rounded" data-i18n="guide_btn">📖 GUIDA</button>
+                        <button id="btn-open-shop" class="cyber-btn py-1.5 sm:py-2 bg-yellow-950/60 border border-yellow-500/50 text-yellow-300 font-orbitron text-[11px] sm:text-xs rounded" data-i18n="shop_btn">🛒 SHOP</button>
+                        <button id="btn-open-settings" class="cyber-btn py-1.5 sm:py-2 bg-gray-900/80 border border-cyan-500/50 text-cyan-300 font-orbitron text-[11px] sm:text-xs rounded" data-i18n="settings_btn">⚙️ SETTINGS</button>
                     </div>
                 </div>
             </div>
@@ -206,21 +213,21 @@
             <div id="modal-tutorial" class="screen-overlay absolute inset-0 z-40 flex flex-col items-center justify-center p-4 cyber-glass rounded-lg hidden">
                 <div class="w-full max-w-lg bg-gray-950/95 border border-purple-500/50 rounded-lg p-4 flex flex-col max-h-[90%] overflow-y-auto pointer-events-auto">
                     <div class="flex justify-between items-center mb-3 border-b border-purple-500/30 pb-2">
-                        <h3 class="text-lg font-bold font-orbitron text-purple-400">🎓 ACCADEMIA PILOTI - TUTORIAL</h3>
+                        <h3 class="text-base sm:text-lg font-bold font-orbitron text-purple-400">🎓 ACCADEMIA PILOTI - TUTORIAL</h3>
                         <button id="btn-close-tutorial" class="cyber-btn text-gray-400 hover:text-white font-bold text-xl px-2">&times;</button>
                     </div>
                     <div class="space-y-3 font-mono text-xs text-gray-200 pr-1">
                         <div class="bg-gray-900/80 p-2.5 rounded border border-cyan-500/30">
                             <h4 class="text-cyan-300 font-orbitron font-bold mb-1">1. MOVIMENTO E GUIDA</h4>
-                            <p>Usa i tasti freccia o WASD (oppure il D-pad touch sui dispositivi mobili) per orientare la testa del serpentino sulla griglia. Non puoi tornare direttamente sui tuoi passi.</p>
+                            <p>Usa i tasti freccia o WASD (oppure il D-pad touch moderno in basso su smartphone) per orientare la testa del serpentino sulla griglia.</p>
                         </div>
                         <div class="bg-gray-900/80 p-2.5 rounded border border-yellow-500/30">
                             <h4 class="text-yellow-400 font-orbitron font-bold mb-1">2. CRESCITA E VITTORIA</h4>
-                            <p>Ogni mela/nodo mangiato allunga il tuo corpo di un blocco esatto e aumenta il punteggio e le combo. Se riesci a coprire ogni singolo slot della griglia senza schiantarti, completi la simulazione!</p>
+                            <p>Ogni mela/nodo mangiato allunga il tuo corpo di un blocco esatto. Se riesci a coprire ogni singolo slot della griglia senza schiantarti, completi la simulazione con successo!</p>
                         </div>
                         <div class="bg-gray-900/80 p-2.5 rounded border border-pink-500/30">
                             <h4 class="text-pink-400 font-orbitron font-bold mb-1">3. POTERE SLOW-MO</h4>
-                            <p>Tieni premuta la <b>BARRA SPAZIATRICE</b> (o il pulsante Slow-Mo tondo su mobile) per rallentare il tempo e schivare le situazioni critiche. La barra si consuma e si ricarica nel tempo.</p>
+                            <p>Tieni premuta la <b>BARRA SPAZIATRICE</b> o il pulsante SLOW tondo per rallentare il tempo nei momenti di massima tensione.</p>
                         </div>
                     </div>
                 </div>
@@ -228,7 +235,7 @@
 
             <!-- Pause Screen -->
             <div id="screen-pause" class="screen-overlay absolute inset-0 z-30 flex flex-col items-center justify-center p-4 cyber-glass rounded-lg hidden">
-                <h2 class="text-3xl font-black font-orbitron text-yellow-400 mb-4" data-i18n="paused_title">SIMULATION PAUSED</h2>
+                <h2 class="text-2xl sm:text-3xl font-black font-orbitron text-yellow-400 mb-4" data-i18n="paused_title">SIMULATION PAUSED</h2>
                 <div class="flex flex-col gap-3 w-56">
                     <button id="btn-resume" class="cyber-btn w-full py-2.5 bg-cyan-500 text-gray-950 font-bold font-orbitron rounded" data-i18n="resume">RESUME</button>
                     <button id="btn-restart-pause" class="cyber-btn w-full py-2.5 bg-pink-600 text-white font-bold font-orbitron rounded" data-i18n="restart">RESTART</button>
@@ -237,12 +244,12 @@
             </div>
 
             <!-- Game Over Screen -->
-            <div id="screen-game-over" class="screen-overlay absolute inset-0 z-30 flex flex-col items-center justify-center p-4 cyber-glass rounded-lg hidden">
-                <div class="text-center mb-3">
-                    <h2 id="game-over-title-text" class="text-3xl sm:text-4xl font-black font-orbitron text-pink-500 mb-1" data-i18n="game_over_title">RUN TERMINATED</h2>
-                    <p id="game-over-reason" class="text-xs font-mono text-cyan-400">NEURAL LINK SEVERED</p>
+            <div id="screen-game-over" class="screen-overlay absolute inset-0 z-30 flex flex-col items-center justify-center p-4 cyber-glass rounded-lg hidden overflow-y-auto">
+                <div class="text-center mb-2 sm:mb-3">
+                    <h2 id="game-over-title-text" class="text-2xl sm:text-4xl font-black font-orbitron text-pink-500 mb-1" data-i18n="game_over_title">RUN TERMINATED</h2>
+                    <p id="game-over-reason" class="text-[11px] sm:text-xs font-mono text-cyan-400">NEURAL LINK SEVERED</p>
                 </div>
-                <div class="w-full max-w-sm bg-gray-950/90 border border-cyan-500/40 p-4 rounded-lg mb-3 flex flex-col gap-1 font-mono text-xs">
+                <div class="w-full max-w-sm bg-gray-950/90 border border-cyan-500/40 p-3 sm:p-4 rounded-lg mb-2 sm:mb-3 flex flex-col gap-1 font-mono text-xs">
                     <div class="flex justify-between border-b border-gray-800 pb-1">
                         <span class="text-gray-400" data-i18n="score">SCORE:</span>
                         <span id="go-score" class="text-cyan-300 font-bold font-orbitron">0</span>
@@ -264,14 +271,13 @@
                         <span id="go-combo" class="text-green-300 font-bold">1x</span>
                     </div>
                 </div>
-                <!-- Mini Leaderboard -->
-                <div class="w-full max-w-sm bg-gray-900/60 border border-pink-500/30 p-2 rounded-lg mb-3 font-mono text-[11px]">
+                <div class="w-full max-w-sm bg-gray-900/60 border border-pink-500/30 p-2 rounded-lg mb-2 sm:mb-3 font-mono text-[11px]">
                     <div class="text-pink-400 font-bold font-orbitron mb-1">🏆 TOP 3 RECENT RUNS</div>
                     <div id="local-leaderboard" class="space-y-0.5 text-gray-300"></div>
                 </div>
                 <div class="flex gap-3 w-full max-w-sm relative z-40">
-                    <button id="btn-replay" class="cyber-btn flex-1 py-3 bg-gradient-to-r from-cyan-500 to-pink-500 text-gray-950 font-black font-orbitron text-xs rounded" data-i18n="reinitialize">RE-INITIALIZE</button>
-                    <button id="btn-main-menu-go" class="cyber-btn flex-1 py-3 bg-gray-900 border border-cyan-500/50 text-cyan-300 font-bold font-orbitron text-xs rounded" data-i18n="main_menu">MAIN MENU</button>
+                    <button id="btn-replay" class="cyber-btn flex-1 py-2.5 sm:py-3 bg-gradient-to-r from-cyan-500 to-pink-500 text-gray-950 font-black font-orbitron text-xs rounded" data-i18n="reinitialize">RE-INITIALIZE</button>
+                    <button id="btn-main-menu-go" class="cyber-btn flex-1 py-2.5 sm:py-3 bg-gray-900 border border-cyan-500/50 text-cyan-300 font-bold font-orbitron text-xs rounded" data-i18n="main_menu">MAIN MENU</button>
                 </div>
             </div>
 
@@ -279,17 +285,17 @@
             <div id="modal-how-to-play" class="screen-overlay absolute inset-0 z-40 flex flex-col items-center justify-center p-4 cyber-glass rounded-lg hidden">
                 <div class="w-full max-w-lg bg-gray-950/95 border border-emerald-500/50 rounded-lg p-4 flex flex-col max-h-[90%] overflow-y-auto pointer-events-auto">
                     <div class="flex justify-between items-center mb-3 border-b border-emerald-500/30 pb-2">
-                        <h3 class="text-lg font-bold font-orbitron text-emerald-400">📖 GUIDA & REGOLE</h3>
+                        <h3 class="text-base sm:text-lg font-bold font-orbitron text-emerald-400">📖 GUIDA & REGOLE</h3>
                         <button id="btn-close-how-to-play" class="cyber-btn text-gray-400 hover:text-white font-bold text-xl px-2">&times;</button>
                     </div>
                     <div class="space-y-4 font-mono text-xs text-gray-200 pr-1">
                         <div class="bg-gray-900/80 p-3 rounded border border-cyan-500/30">
                             <h4 class="text-cyan-300 font-orbitron font-bold text-sm mb-1" data-i18n="controls_title">🎮 COMANDI DI GIOCO</h4>
-                            <p class="text-gray-300" data-i18n="controls_desc">Usa le frecce o WASD. Tieni SPAZIO per attivare il rallentatore Slow-Mo (la barra si consuma e si ricarica). Premi P per la pausa.</p>
+                            <p class="text-gray-300" data-i18n="controls_desc">Usa le frecce o WASD. Tieni SPAZIO per attivare il rallentatore Slow-Mo. Premi P per la pausa.</p>
                         </div>
                         <div class="bg-gray-900/80 p-3 rounded border border-purple-500/30">
                             <h4 class="text-purple-300 font-orbitron font-bold text-sm mb-2" data-i18n="modes_title">🕹️ REGOLA DI CRESCITA & VITTORIA</h4>
-                            <p class="text-gray-300 mb-2">Ogni volta che il serpentino mangia un blocchetto, si allunga di un blocco. Se riempi interamente la griglia di gioco, completi la simulazione con la vittoria assoluta!</p>
+                            <p class="text-gray-300 mb-2">Ogni volta che il serpentino mangia un blocchetto, si allunga di un blocco. Se riempi interamente la griglia di gioco, completi la simulazione!</p>
                         </div>
                     </div>
                 </div>
@@ -299,7 +305,7 @@
             <div id="modal-achievements" class="screen-overlay absolute inset-0 z-40 flex flex-col items-center justify-center p-4 cyber-glass rounded-lg hidden">
                 <div class="w-full max-w-lg bg-gray-950/95 border border-pink-500/50 rounded-lg p-4 flex flex-col max-h-[90%] overflow-y-auto pointer-events-auto">
                     <div class="flex justify-between items-center mb-3 border-b border-pink-500/30 pb-2">
-                        <h3 class="text-lg font-bold font-orbitron text-pink-400">🏆 TROFEI & OBIETTIVI</h3>
+                        <h3 class="text-base sm:text-lg font-bold font-orbitron text-pink-400">🏆 TROFEI & OBIETTIVI</h3>
                         <button id="btn-close-achievements" class="cyber-btn text-gray-400 hover:text-white font-bold text-xl px-2">&times;</button>
                     </div>
                     <div id="achievements-container" class="space-y-2 font-mono text-xs"></div>
@@ -310,39 +316,39 @@
             <div id="modal-settings" class="screen-overlay absolute inset-0 z-40 flex flex-col items-center justify-center p-4 cyber-glass rounded-lg hidden">
                 <div class="w-full max-w-lg bg-gray-950/95 border border-cyan-500/50 rounded-lg p-4 flex flex-col max-h-[90%] overflow-y-auto pointer-events-auto">
                     <div class="flex justify-between items-center mb-3 border-b border-cyan-500/30 pb-2">
-                        <h3 class="text-lg font-bold font-orbitron text-cyan-300" data-i18n="settings_title">⚙️ SETTINGS & THEMES</h3>
+                        <h3 class="text-base sm:text-lg font-bold font-orbitron text-cyan-300" data-i18n="settings_title">⚙️ SETTINGS & THEMES</h3>
                         <button id="btn-close-settings" class="cyber-btn text-gray-400 hover:text-white font-bold text-xl px-2">&times;</button>
                     </div>
                     
-                    <div class="mb-4">
-                        <label class="block text-xs font-orbitron text-yellow-400 mb-2" data-i18n="lang_label">LANGUAGE / LINGUA</label>
+                    <div class="mb-3">
+                        <label class="block text-xs font-orbitron text-yellow-400 mb-1.5" data-i18n="lang_label">LANGUAGE / LINGUA</label>
                         <div class="grid grid-cols-2 gap-2">
                             <button data-lang="it" class="lang-btn cyber-btn p-2 rounded border border-cyan-500 bg-cyan-950 text-xs font-bold text-cyan-300">Italiano</button>
                             <button data-lang="en" class="lang-btn cyber-btn p-2 rounded border border-gray-700 bg-gray-900 text-xs font-bold text-gray-400">English</button>
                         </div>
                     </div>
 
-                    <div class="mb-4">
-                        <label class="block text-xs font-orbitron text-pink-400 mb-2" data-i18n="skin_label">🐍 SELECT SNAKE SKIN</label>
+                    <div class="mb-3">
+                        <label class="block text-xs font-orbitron text-pink-400 mb-1.5" data-i18n="skin_label">🐍 SELECT SNAKE SKIN</label>
                         <div id="skins-container" class="grid grid-cols-2 sm:grid-cols-5 gap-1.5 text-[11px]"></div>
                     </div>
 
-                    <div class="mb-4">
-                        <label class="block text-xs font-orbitron text-yellow-400 mb-2" data-i18n="themes_label">VISUAL THEMES ENGINE</label>
-                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                            <button data-theme="cartoon" class="theme-select-btn cyber-btn p-2 rounded border border-sky-400 bg-sky-200 text-xs font-bold text-sky-900">🎨 CARTOON WORLD</button>
-                            <button data-theme="cyberpunk" class="theme-select-btn cyber-btn p-2 rounded border border-cyan-500 bg-cyan-950/80 text-xs font-bold text-cyan-300">CYBERPUNK 2027</button>
-                            <button data-theme="retro" class="theme-select-btn cyber-btn p-2 rounded border border-gray-700 bg-gray-900 text-xs font-bold text-green-400">RETRO ARCADE (CRT)</button>
-                            <button data-theme="minimal" class="theme-select-btn cyber-btn p-2 rounded border border-gray-700 bg-gray-200 text-xs font-bold text-gray-800">ULTRA MINIMALIST</button>
-                            <button data-theme="matrix" class="theme-select-btn cyber-btn p-2 rounded border border-gray-700 bg-black text-xs font-bold text-green-500">MATRIX HACKER</button>
-                            <button data-theme="cosmic" class="theme-select-btn cyber-btn p-2 rounded border border-gray-700 bg-purple-950 text-xs font-bold text-purple-300">DEEP SPACE COSMIC</button>
-                            <button data-theme="paper" class="theme-select-btn cyber-btn p-2 rounded border border-gray-700 bg-amber-50 text-xs font-bold text-gray-800">PAPER SKETCHBOOK</button>
-                            <button data-theme="vaporwave" class="theme-select-btn cyber-btn p-2 rounded border border-gray-700 bg-pink-950 text-xs font-bold text-pink-300 col-span-2 sm:col-span-1">VAPORWAVE 90s</button>
+                    <div class="mb-3">
+                        <label class="block text-xs font-orbitron text-yellow-400 mb-1.5" data-i18n="themes_label">VISUAL THEMES ENGINE</label>
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-1.5">
+                            <button data-theme="cartoon" class="theme-select-btn cyber-btn p-2 rounded border border-sky-400 bg-sky-200 text-xs font-bold text-sky-900">🎨 CARTOON</button>
+                            <button data-theme="cyberpunk" class="theme-select-btn cyber-btn p-2 rounded border border-cyan-500 bg-cyan-950/80 text-xs font-bold text-cyan-300">CYBERPUNK</button>
+                            <button data-theme="retro" class="theme-select-btn cyber-btn p-2 rounded border border-gray-700 bg-gray-900 text-xs font-bold text-green-400">RETRO CRT</button>
+                            <button data-theme="minimal" class="theme-select-btn cyber-btn p-2 rounded border border-gray-700 bg-gray-200 text-xs font-bold text-gray-800">MINIMAL</button>
+                            <button data-theme="matrix" class="theme-select-btn cyber-btn p-2 rounded border border-gray-700 bg-black text-xs font-bold text-green-500">MATRIX</button>
+                            <button data-theme="cosmic" class="theme-select-btn cyber-btn p-2 rounded border border-gray-700 bg-purple-950 text-xs font-bold text-purple-300">COSMIC</button>
+                            <button data-theme="paper" class="theme-select-btn cyber-btn p-2 rounded border border-gray-700 bg-amber-50 text-xs font-bold text-gray-800">PAPER</button>
+                            <button data-theme="vaporwave" class="theme-select-btn cyber-btn p-2 rounded border border-gray-700 bg-pink-950 text-xs font-bold text-pink-300 col-span-2">VAPORWAVE</button>
                         </div>
                     </div>
 
-                    <div class="space-y-3 font-mono text-xs border-t border-gray-800 pt-3">
-                        <div class="flex flex-col gap-1.5 bg-gray-900/90 p-2.5 rounded border border-pink-500/30">
+                    <div class="space-y-2.5 font-mono text-xs border-t border-gray-800 pt-3">
+                        <div class="flex flex-col gap-1.5 bg-gray-900/90 p-2 rounded border border-pink-500/30">
                             <div class="flex justify-between items-center">
                                 <span class="text-pink-400 font-bold font-orbitron" data-i18n="jukebox_label">🎶 JUKEBOX PLAYLIST:</span>
                                 <button id="modal-music-toggle-btn" class="cyber-btn px-3 py-1 bg-pink-600 text-white font-bold rounded text-[11px]">MUSIC: ON</button>
@@ -356,11 +362,11 @@
                             </select>
                         </div>
                         <div class="flex justify-between items-center">
-                            <span data-i18n="bgm_vol">BACKGROUND MUSIC VOLUME:</span>
+                            <span data-i18n="bgm_vol">MUSIC VOLUME:</span>
                             <input id="setting-bgm-vol" type="range" min="0" max="1" step="0.05" value="0.35" class="accent-pink-400 pointer-events-auto">
                         </div>
                         <div class="flex justify-between items-center">
-                            <span data-i18n="sfx_vol">SFX SOUND EFFECTS VOLUME:</span>
+                            <span data-i18n="sfx_vol">SFX VOLUME:</span>
                             <input id="setting-sfx-vol" type="range" min="0" max="1" step="0.05" value="0.8" class="accent-cyan-400 pointer-events-auto">
                         </div>
                     </div>
@@ -371,7 +377,7 @@
             <div id="modal-shop" class="screen-overlay absolute inset-0 z-40 flex flex-col items-center justify-center p-4 cyber-glass rounded-lg hidden">
                 <div class="w-full max-w-lg bg-gray-950/95 border border-yellow-500/50 rounded-lg p-4 flex flex-col max-h-[90%] pointer-events-auto">
                     <div class="flex justify-between items-center mb-3 border-b border-yellow-500/30 pb-2">
-                        <h3 class="text-lg font-bold font-orbitron text-yellow-400" data-i18n="shop_title">🛒 PERK UPGRADE SHOP</h3>
+                        <h3 class="text-base sm:text-lg font-bold font-orbitron text-yellow-400" data-i18n="shop_title">🛒 PERK UPGRADE SHOP</h3>
                         <button id="btn-close-shop" class="cyber-btn text-gray-400 hover:text-white font-bold text-xl px-2">&times;</button>
                     </div>
                     <div id="shop-items-container" class="flex-1 overflow-y-auto space-y-2 pr-1 font-mono text-xs"></div>
@@ -379,23 +385,25 @@
             </div>
         </main>
 
-        <!-- Mobile Controls -->
-        <footer id="mobile-controls" class="w-full h-32 mt-1 flex justify-between items-center gap-2 z-20 sm:hidden">
-            <div class="relative w-28 h-28 grid grid-cols-3 grid-rows-3 gap-1 p-1 bg-gray-950/80 rounded-full border border-cyan-500/30">
+        <!-- Touch Controls Moderni per Smartphone (Ottimizzati e ben distanziati) -->
+        <footer id="mobile-controls" class="w-full h-28 sm:hidden flex justify-between items-center px-3 gap-2 z-20">
+            <!-- Modern Cyber D-Pad -->
+            <div class="relative w-24 h-24 grid grid-cols-3 grid-rows-3 gap-0.5 p-1 bg-gray-950/90 rounded-full border border-cyan-500/40 shadow-[0_0_15px_rgba(0,240,255,0.15)]">
                 <div></div>
-                <button id="btn-touch-up" class="cyber-btn cyber-glass rounded flex items-center justify-center text-cyan-400 active:bg-cyan-500/50">▲</button>
+                <button id="btn-touch-up" class="cyber-btn cyber-glass rounded-t-lg flex items-center justify-center text-cyan-400 active:bg-cyan-500/40 font-bold text-xs">▲</button>
                 <div></div>
-                <button id="btn-touch-left" class="cyber-btn cyber-glass rounded flex items-center justify-center text-cyan-400 active:bg-cyan-500/50">◀</button>
-                <div class="flex items-center justify-center text-[8px] text-gray-500 font-mono">PAD</div>
-                <button id="btn-touch-right" class="cyber-btn cyber-glass rounded flex items-center justify-center text-cyan-400 active:bg-cyan-500/50">▶</button>
+                <button id="btn-touch-left" class="cyber-btn cyber-glass rounded-l-lg flex items-center justify-center text-cyan-400 active:bg-cyan-500/40 font-bold text-xs">◀</button>
+                <div class="flex items-center justify-center text-[7px] text-cyan-400 font-orbitron font-bold opacity-60">PAD</div>
+                <button id="btn-touch-right" class="cyber-btn cyber-glass rounded-r-lg flex items-center justify-center text-cyan-400 active:bg-cyan-500/40 font-bold text-xs">▶</button>
                 <div></div>
-                <button id="btn-touch-down" class="cyber-btn cyber-glass rounded flex items-center justify-center text-cyan-400 active:bg-cyan-500/50">▼</button>
+                <button id="btn-touch-down" class="cyber-btn cyber-glass rounded-b-lg flex items-center justify-center text-cyan-400 active:bg-cyan-500/40 font-bold text-xs">▼</button>
                 <div></div>
             </div>
-            <div class="flex-1 h-28 flex justify-center items-center">
-                <button id="btn-touch-slomo" class="w-24 h-24 rounded-full cyber-glass border-2 border-pink-500 flex flex-col items-center justify-center text-pink-400 active:bg-pink-500/40 font-orbitron font-bold text-xs shadow-lg">
-                    <span>SLOW-MO</span>
-                    <span class="text-[8px] text-gray-400 mt-0.5">HOLD</span>
+            <!-- Ergonomic Slow-Mo Button -->
+            <div class="flex-1 h-24 flex justify-end items-center pr-1">
+                <button id="btn-touch-slomo" class="w-20 h-20 rounded-full cyber-glass border-2 border-pink-500 flex flex-col items-center justify-center text-pink-400 active:bg-pink-500/50 font-orbitron font-bold text-xs shadow-[0_0_15px_rgba(255,113,206,0.3)]">
+                    <span class="tracking-widest text-[10px]">SLOW</span>
+                    <span class="text-[7px] text-gray-300 opacity-80">HOLD</span>
                 </button>
             </div>
         </footer>
@@ -430,13 +438,13 @@
                 skin_label: "🐍 SCEGLI SKIN SERPENTE",
                 themes_label: "MOTORE GRAFICO TEMI",
                 jukebox_label: "🎶 PLAYLIST JUKEBOX:",
-                bgm_vol: "VOLUME MUSICA DI SOTTOFONDO:",
-                sfx_vol: "VOLUME EFFETTI SONORI:",
+                bgm_vol: "VOLUME MUSICA:",
+                sfx_vol: "VOLUME EFFETTI:",
                 shop_title: "🛒 NEGOZIO POTENZIAMENTI",
                 guide_title: "📖 GUIDA & REGOLE",
                 settings_title: "⚙️ IMPOSTAZIONI & TEMI",
                 controls_title: "🎮 COMANDI DI GIOCO",
-                controls_desc: "Usa le frecce o WASD. Tieni SPAZIO per attivare il rallentatore Slow-Mo (la barra si consuma e si ricarica). Premi P per la pausa.",
+                controls_desc: "Usa le frecce o WASD. Tieni SPAZIO per attivare il rallentatore Slow-Mo. Premi P per la pausa.",
                 modes_title: "🕹️ REGOLA DI CRESCITA & VITTORIA",
                 desc_classic: "Esperienza equilibrata con accelerazione dinamica graduale.",
                 desc_overdrive: "Velocità iniziale raddoppiata per veri professionisti.",
@@ -469,13 +477,13 @@
                 skin_label: "🐍 SELECT SNAKE SKIN",
                 themes_label: "VISUAL THEMES ENGINE",
                 jukebox_label: "🎶 JUKEBOX PLAYLIST:",
-                bgm_vol: "BACKGROUND MUSIC VOLUME:",
-                sfx_vol: "SFX SOUND EFFECTS VOLUME:",
+                bgm_vol: "MUSIC VOLUME:",
+                sfx_vol: "SFX VOLUME:",
                 shop_title: "🛒 PERK UPGRADE SHOP",
                 guide_title: "📖 GUIDE & RULES",
-                settings_title: "⚙️ SETTINGS & THEMES",
+                settings_title: "⚙️️ SETTINGS & THEMES",
                 controls_title: "🎮 GAME CONTROLS",
-                controls_desc: "Use arrow keys or WASD. Hold SPACEBAR to activate Slow-Mo (meter drains and refills). Press P to pause.",
+                controls_desc: "Use arrow keys or WASD. Hold SPACEBAR to activate Slow-Mo. Press P to pause.",
                 modes_title: "🕹️ GROWTH & VICTORY RULE",
                 desc_classic: "The classic and balanced Snake experience. Speed scales as you collect food.",
                 desc_overdrive: "High tension mode for experts. Starting speed is doubled.",
@@ -716,7 +724,6 @@
             renderShop();
             requestAnimationFrame(renderLoop);
 
-            // Rimozione automatica della schermata di caricamento dopo 2.2 secondi
             setTimeout(() => {
                 const splash = document.getElementById('screen-splash');
                 splash.style.opacity = '0';
@@ -725,6 +732,8 @@
                     showScreen('screen-main-menu');
                 }, 700);
             }, 2200);
+
+            window.addEventListener('resize', resizeCanvas);
         });
 
         function loadSaveData() {
@@ -832,7 +841,7 @@
 
         function resizeCanvas() {
             const container = document.getElementById('canvas-container');
-            const size = Math.min(container.clientWidth - 16, container.clientHeight - 16, 600);
+            const size = Math.min(container.clientWidth - 8, container.clientHeight - 8, 560);
             canvas.width = size; canvas.height = size;
             cellSize = canvas.width / gridCols;
         }
@@ -873,7 +882,7 @@
             activeChallenges.forEach(c => {
                 let text = currentLang === 'en' ? c.textEn : c.textIt;
                 const row = document.createElement('div');
-                row.className = `flex justify-between items-center text-[11px] p-1.5 rounded border ${c.completed ? 'bg-emerald-950/40 border-emerald-500/50 text-emerald-300' : 'bg-gray-900/60 border-gray-800 text-gray-300'}`;
+                row.className = `flex justify-between items-center text-[10px] sm:text-[11px] p-1.5 rounded border ${c.completed ? 'bg-emerald-950/40 border-emerald-500/50 text-emerald-300' : 'bg-gray-900/60 border-gray-800 text-gray-300'}`;
                 row.innerHTML = `<span>${text}</span><span class="font-bold">${c.completed ? '✅' : '+' + c.reward + ' ⚡'}</span>`;
                 container.appendChild(row);
             });
@@ -910,10 +919,17 @@
                 }
             });
             window.addEventListener('keyup', (e) => { if (e.key === ' ') isSlowMoActive = false; });
+            
             document.getElementById('btn-touch-up').addEventListener('click', () => { if (dir.y === 0) nextDir = { x: 0, y: -1 }; });
             document.getElementById('btn-touch-down').addEventListener('click', () => { if (dir.y === 0) nextDir = { x: 0, y: 1 }; });
             document.getElementById('btn-touch-left').addEventListener('click', () => { if (dir.x === 0) nextDir = { x: -1, y: 0 }; });
             document.getElementById('btn-touch-right').addEventListener('click', () => { if (dir.x === 0) nextDir = { x: 1, y: 0 }; });
+
+            const touchSlomo = document.getElementById('btn-touch-slomo');
+            touchSlomo.addEventListener('touchstart', (e) => { e.preventDefault(); isSlowMoActive = true; });
+            touchSlomo.addEventListener('touchend', (e) => { e.preventDefault(); isSlowMoActive = false; });
+            touchSlomo.addEventListener('mousedown', () => { isSlowMoActive = true; });
+            touchSlomo.addEventListener('mouseup', () => { isSlowMoActive = false; });
         }
 
         function setupUIEvents() {
@@ -1180,10 +1196,10 @@
             const titleEl = document.getElementById('game-over-title-text');
             if (isVictory) {
                 titleEl.innerText = TRANSLATIONS[currentLang].victory_title;
-                titleEl.className = "text-3xl sm:text-4xl font-black font-orbitron text-yellow-400 mb-1";
+                titleEl.className = "text-2xl sm:text-4xl font-black font-orbitron text-yellow-400 mb-1";
             } else {
                 titleEl.innerText = TRANSLATIONS[currentLang].game_over_title;
-                titleEl.className = "text-3xl sm:text-4xl font-black font-orbitron text-pink-500 mb-1";
+                titleEl.className = "text-2xl sm:text-4xl font-black font-orbitron text-pink-500 mb-1";
             }
 
             document.getElementById('game-over-reason').innerText = reason;
