@@ -3,7 +3,7 @@
 <head>
     <link rel="manifest" href="manifest.json">
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>SNAKE EVOLUTION 2027 - ULTIMATE</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Orbitron:wght@400;600;800;900&family=Press+Start+2P&family=Rajdhani:wght@500;600;700&family=VT323&display=swap" rel="stylesheet">
@@ -70,11 +70,104 @@
             40%, 60% { transform: translate3d(4px, -1px, 0); }
         }
 
+        /* Modern 2026 Minimal Mobile Pad */
+        #mobile-controls {
+            padding-bottom: max(16px, env(safe-area-inset-bottom, 16px));
+            touch-action: none;
+        }
+
+        .minimal-dpad {
+            position: relative;
+            width: 140px;
+            height: 140px;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 36px;
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .minimal-btn {
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            color: rgba(255, 255, 255, 0.7);
+            border-radius: 16px;
+            transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+            touch-action: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .minimal-btn svg {
+            width: 18px;
+            height: 18px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2.2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            transition: transform 0.15s ease;
+        }
+
+        .minimal-btn:active {
+            background: rgba(0, 240, 255, 0.15);
+            color: #00f0ff;
+            border-color: rgba(0, 240, 255, 0.4);
+            transform: scale(0.92);
+        }
+
+        .minimal-btn-up { top: 8px; left: 47px; width: 46px; height: 40px; }
+        .minimal-btn-down { bottom: 8px; left: 47px; width: 46px; height: 40px; }
+        .minimal-btn-left { top: 47px; left: 8px; width: 40px; height: 46px; }
+        .minimal-btn-right { top: 47px; right: 8px; width: 40px; height: 46px; }
+        .minimal-center-core {
+            position: absolute;
+            top: 59px;
+            left: 59px;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .minimal-slomo-btn {
+            position: relative;
+            width: 84px;
+            height: 84px;
+            border-radius: 28px;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            color: rgba(255, 255, 255, 0.7);
+            touch-action: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .minimal-slomo-btn:active {
+            background: rgba(255, 113, 206, 0.15);
+            border-color: rgba(255, 113, 206, 0.5);
+            color: #ff71ce;
+            transform: scale(0.92);
+            box-shadow: 0 0 25px rgba(255, 113, 206, 0.35);
+        }
+
         @media (max-width: 640px) {
             #app-container { padding: 4px !important; justify-content: space-between !important; }
-            header { padding: 6px 10px !important; margin-bottom: 4px !important; }
+            header { padding: 6px 10px !important; margin-bottom: 2px !important; }
             main { margin: 0 !important; flex: 1 !important; min-height: 0 !important; }
-            #mobile-controls { height: 110px !important; margin-top: 2px !important; }
+            #mobile-controls { margin-top: 4px !important; }
         }
 
         ::-webkit-scrollbar { width: 6px; }
@@ -129,11 +222,11 @@
                 <button id="btn-shop" class="cyber-btn cyber-glass p-1.5 sm:p-2 rounded border border-yellow-500/40 text-yellow-400 text-xs" title="Shop">🛒</button>
                 <button id="btn-achievements" class="cyber-btn cyber-glass p-1.5 sm:p-2 rounded border border-pink-500/40 text-pink-400 text-xs" title="Trofei">🏆</button>
                 <div class="hidden sm:flex items-center gap-1 cyber-glass px-2 py-1 rounded border border-pink-500/40">
-                    <button id="btn-prev-track" class="cyber-btn text-xs text-pink-400 px-1">⏮️</button>
+                    <button id="btn-prev-track" class="cyber-btn text-xs text-pink-400 px-1">⏮️️</button>
                     <button id="btn-music-toggle" class="cyber-btn text-pink-400 font-mono text-xs px-1">
                         🎵 <span id="hud-track-name" class="text-[10px] text-gray-300 font-bold">1: Retro Arcade</span>
                     </button>
-                    <button id="btn-next-track" class="cyber-btn text-xs text-pink-400 px-1">⏭️</button>
+                    <button id="btn-next-track" class="cyber-btn text-xs text-pink-400 px-1">⏭</button>
                 </div>
                 <button id="btn-pause" class="cyber-btn cyber-glass p-1.5 sm:p-2 rounded border border-cyan-500/40 text-cyan-400 transition hidden text-xs" title="Pausa">⏸️</button>
             </div>
@@ -385,23 +478,33 @@
             </div>
         </main>
 
-        <!-- Touch Controls Moderni per Smartphone -->
-        <footer id="mobile-controls" class="w-full h-28 sm:hidden flex justify-between items-center px-3 gap-2 z-20">
-            <div class="relative w-24 h-24 grid grid-cols-3 grid-rows-3 gap-0.5 p-1 bg-gray-950/90 rounded-full border border-cyan-500/40 shadow-[0_0_15px_rgba(0,240,255,0.15)]">
-                <div></div>
-                <button id="btn-touch-up" class="cyber-btn cyber-glass rounded-t-lg flex items-center justify-center text-cyan-400 active:bg-cyan-500/40 font-bold text-xs">▲</button>
-                <div></div>
-                <button id="btn-touch-left" class="cyber-btn cyber-glass rounded-l-lg flex items-center justify-center text-cyan-400 active:bg-cyan-500/40 font-bold text-xs">◀</button>
-                <div class="flex items-center justify-center text-[7px] text-cyan-400 font-orbitron font-bold opacity-60">PAD</div>
-                <button id="btn-touch-right" class="cyber-btn cyber-glass rounded-r-lg flex items-center justify-center text-cyan-400 active:bg-cyan-500/40 font-bold text-xs">▶</button>
-                <div></div>
-                <button id="btn-touch-down" class="cyber-btn cyber-glass rounded-b-lg flex items-center justify-center text-cyan-400 active:bg-cyan-500/40 font-bold text-xs">▼</button>
-                <div></div>
+        <!-- Touch Controls Minimal & Moderni 2026 -->
+        <footer id="mobile-controls" class="w-full sm:hidden flex justify-between items-center px-6 z-30 mb-2">
+            <!-- Modern Minimal D-Pad -->
+            <div class="minimal-dpad">
+                <button id="btn-touch-up" class="minimal-btn minimal-btn-up" aria-label="Up">
+                    <svg viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"></polyline></svg>
+                </button>
+                <button id="btn-touch-left" class="minimal-btn minimal-btn-left" aria-label="Left">
+                    <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                </button>
+                <div class="minimal-center-core"></div>
+                <button id="btn-touch-right" class="minimal-btn minimal-btn-right" aria-label="Right">
+                    <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                </button>
+                <button id="btn-touch-down" class="minimal-btn minimal-btn-down" aria-label="Down">
+                    <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </button>
             </div>
-            <div class="flex-1 h-24 flex justify-end items-center pr-1">
-                <button id="btn-touch-slomo" class="w-20 h-20 rounded-full cyber-glass border-2 border-pink-500 flex flex-col items-center justify-center text-pink-400 active:bg-pink-500/50 font-orbitron font-bold text-xs shadow-[0_0_15px_rgba(255,113,206,0.3)]">
-                    <span class="tracking-widest text-[10px]">SLOW</span>
-                    <span class="text-[7px] text-gray-300 opacity-80">HOLD</span>
+
+            <!-- Modern Minimal Slow-Mo Module -->
+            <div class="flex-1 flex justify-end items-center">
+                <button id="btn-touch-slomo" class="minimal-slomo-btn" aria-label="Slow Motion">
+                    <svg class="w-6 h-6 mb-1 opacity-80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polyline points="12 6 12 12 16 14"></polyline>
+                    </svg>
+                    <span class="text-[10px] tracking-widest font-mono font-bold">SLOW</span>
                 </button>
             </div>
         </footer>
@@ -520,7 +623,7 @@
         let recentScores = [];
         let currentLang = 'it';
         let selectedSkin = 'cyber';
-        let currentGridLevel = 20; // Inizia da 20x20 in modalità levels
+        let currentGridLevel = 20;
 
         function initChallenges() {
             const saved = localStorage.getItem('snk2027_escalating_challenges');
@@ -733,6 +836,7 @@
             }, 2200);
 
             window.addEventListener('resize', resizeCanvas);
+            window.addEventListener('orientationchange', () => setTimeout(resizeCanvas, 150));
         });
 
         function loadSaveData() {
@@ -841,7 +945,8 @@
         function resizeCanvas() {
             const container = document.getElementById('canvas-container');
             const size = Math.min(container.clientWidth - 8, container.clientHeight - 8, 560);
-            canvas.width = size; canvas.height = size;
+            canvas.width = Math.max(260, size);
+            canvas.height = Math.max(260, size);
             cellSize = canvas.width / gridCols;
         }
 
@@ -919,16 +1024,41 @@
             });
             window.addEventListener('keyup', (e) => { if (e.key === ' ') isSlowMoActive = false; });
             
-            document.getElementById('btn-touch-up').addEventListener('click', () => { if (dir.y === 0) nextDir = { x: 0, y: -1 }; });
-            document.getElementById('btn-touch-down').addEventListener('click', () => { if (dir.y === 0) nextDir = { x: 0, y: 1 }; });
-            document.getElementById('btn-touch-left').addEventListener('click', () => { if (dir.x === 0) nextDir = { x: -1, y: 0 }; });
-            document.getElementById('btn-touch-right').addEventListener('click', () => { if (dir.x === 0) nextDir = { x: 1, y: 0 }; });
+            const bindDirectionButton = (btnId, x, y) => {
+                const btn = document.getElementById(btnId);
+                const handleDir = (e) => {
+                    e.preventDefault();
+                    audio.init();
+                    if (gameState !== 'PLAYING') return;
+                    if (x !== 0 && dir.x === 0) nextDir = { x, y: 0 };
+                    if (y !== 0 && dir.y === 0) nextDir = { x: 0, y };
+                };
+                btn.addEventListener('touchstart', handleDir, { passive: false });
+                btn.addEventListener('mousedown', handleDir);
+            };
+
+            bindDirectionButton('btn-touch-up', 0, -1);
+            bindDirectionButton('btn-touch-down', 0, 1);
+            bindDirectionButton('btn-touch-left', -1, 0);
+            bindDirectionButton('btn-touch-right', 1, 0);
 
             const touchSlomo = document.getElementById('btn-touch-slomo');
-            touchSlomo.addEventListener('touchstart', (e) => { e.preventDefault(); isSlowMoActive = true; });
-            touchSlomo.addEventListener('touchend', (e) => { e.preventDefault(); isSlowMoActive = false; });
-            touchSlomo.addEventListener('mousedown', () => { isSlowMoActive = true; });
-            touchSlomo.addEventListener('mouseup', () => { isSlowMoActive = false; });
+            const startSlomo = (e) => {
+                e.preventDefault();
+                audio.init();
+                isSlowMoActive = true;
+            };
+            const stopSlomo = (e) => {
+                e.preventDefault();
+                isSlowMoActive = false;
+            };
+
+            touchSlomo.addEventListener('touchstart', startSlomo, { passive: false });
+            touchSlomo.addEventListener('touchend', stopSlomo, { passive: false });
+            touchSlomo.addEventListener('touchcancel', stopSlomo, { passive: false });
+            touchSlomo.addEventListener('mousedown', startSlomo);
+            touchSlomo.addEventListener('mouseup', stopSlomo);
+            touchSlomo.addEventListener('mouseleave', stopSlomo);
         }
 
         function setupUIEvents() {
@@ -1065,7 +1195,7 @@
         function startNewGame() {
             audio.init(); audio.startMusic();
             if (gameMode === 'levels') {
-                currentGridLevel = 20; // Inizia da 20x20
+                currentGridLevel = 20;
             } else {
                 currentGridLevel = 26;
             }
@@ -1081,9 +1211,8 @@
             sessionGoldenCount = 0;
             slowMoEnergy = 100; 
             
-            // Velocità iniziale comoda e graduale a seconda della modalità
             if (gameMode === 'levels') {
-                currentTickDelay = 180; // Più lento all'inizio del primo livello
+                currentTickDelay = 180;
             } else if (gameMode === 'overdrive') {
                 currentTickDelay = 90;
             } else {
@@ -1171,12 +1300,10 @@
             } else {
                 if (snake.length >= gridCols * gridRows) {
                     if (gameMode === 'levels' && currentGridLevel < 30) {
-                        currentGridLevel += 2; // Aumenta la griglia di livello in livello fino a 30x30
+                        currentGridLevel += 2;
                         gridCols = currentGridLevel;
                         gridRows = currentGridLevel;
                         resizeCanvas();
-                        
-                        // Incremento progressivo della velocità controllato e non troppo repentino
                         currentTickDelay = Math.max(95, currentTickDelay - 12);
 
                         let startX = Math.floor(gridCols / 2);
