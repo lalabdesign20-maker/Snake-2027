@@ -70,7 +70,6 @@
             40%, 60% { transform: translate3d(4px, -1px, 0); }
         }
 
-        /* Modern 2026 Minimal Mobile Pad */
         #mobile-controls {
             padding-bottom: max(16px, env(safe-area-inset-bottom, 16px));
             touch-action: none;
@@ -110,7 +109,6 @@
             stroke-width: 2.2;
             stroke-linecap: round;
             stroke-linejoin: round;
-            transition: transform 0.15s ease;
         }
 
         .minimal-btn:active {
@@ -161,6 +159,77 @@
             color: #ff71ce;
             transform: scale(0.92);
             box-shadow: 0 0 25px rgba(255, 113, 206, 0.35);
+        }
+
+        #virtual-joystick-base {
+            position: relative;
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #virtual-joystick-knob {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0, 240, 255, 0.5) 0%, rgba(0, 240, 255, 0.15) 100%);
+            border: 1px solid rgba(0, 240, 255, 0.6);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
+            pointer-events: none;
+            transform: translate(0px, 0px);
+            transition: transform 0.05s ease-out;
+        }
+
+        #touch-zones-container {
+            display: none;
+            pointer-events: auto;
+            position: absolute;
+            inset: 0;
+            z-index: 15;
+        }
+        .touch-zone-btn {
+            position: absolute;
+            background: transparent;
+            transition: background 0.1s ease;
+        }
+        .touch-zone-btn:active {
+            background: rgba(0, 240, 255, 0.08);
+        }
+
+        .settings-card {
+            background: rgba(10, 16, 32, 0.7);
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            border-radius: 0.75rem;
+            padding: 0.85rem;
+        }
+
+        .settings-nav-btn {
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            width: 100%;
+            padding: 0.6rem 0.85rem;
+            border-radius: 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-align: left;
+        }
+        .settings-nav-btn.active {
+            background: rgba(0, 240, 255, 0.15);
+            border: 1px solid #00f0ff;
+            color: #00f0ff;
+            box-shadow: 0 0 12px rgba(0, 240, 255, 0.2);
+        }
+        .settings-nav-btn:not(.active) {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: rgba(255, 255, 255, 0.6);
         }
 
         @media (max-width: 640px) {
@@ -222,13 +291,13 @@
                 <button id="btn-shop" class="cyber-btn cyber-glass p-1.5 sm:p-2 rounded border border-yellow-500/40 text-yellow-400 text-xs" title="Shop">🛒</button>
                 <button id="btn-achievements" class="cyber-btn cyber-glass p-1.5 sm:p-2 rounded border border-pink-500/40 text-pink-400 text-xs" title="Trofei">🏆</button>
                 <div class="hidden sm:flex items-center gap-1 cyber-glass px-2 py-1 rounded border border-pink-500/40">
-                    <button id="btn-prev-track" class="cyber-btn text-xs text-pink-400 px-1">⏮️️</button>
+                    <button id="btn-prev-track" class="cyber-btn text-xs text-pink-400 px-1">⏮</button>
                     <button id="btn-music-toggle" class="cyber-btn text-pink-400 font-mono text-xs px-1">
-                        🎵 <span id="hud-track-name" class="text-[10px] text-gray-300 font-bold">1: Retro Arcade</span>
+                        🎵 <span id="hud-track-name" class="text-[10px] text-gray-300 font-bold">1: Neon Horizon</span>
                     </button>
                     <button id="btn-next-track" class="cyber-btn text-xs text-pink-400 px-1">⏭</button>
                 </div>
-                <button id="btn-pause" class="cyber-btn cyber-glass p-1.5 sm:p-2 rounded border border-cyan-500/40 text-cyan-400 transition hidden text-xs" title="Pausa">⏸️</button>
+                <button id="btn-pause-header" class="cyber-btn cyber-glass p-1.5 sm:p-2 rounded border border-cyan-500/40 text-cyan-400 text-xs hidden" title="Pausa">⏸️</button>
             </div>
         </header>
 
@@ -237,9 +306,17 @@
             <div id="canvas-container" class="relative w-full h-full flex items-center justify-center">
                 <canvas id="game-canvas" class="cyber-glass rounded-lg shadow-2xl border border-cyan-500/30 max-w-full max-h-full aspect-square sm:aspect-auto"></canvas>
                 
+                <!-- Overlay 4 Zone Tattili -->
+                <div id="touch-zones-container">
+                    <div id="touch-zone-up" class="touch-zone-btn top-0 left-0 right-0 h-1/3"></div>
+                    <div id="touch-zone-down" class="touch-zone-btn bottom-0 left-0 right-0 h-1/3"></div>
+                    <div id="touch-zone-left" class="touch-zone-btn top-1/3 bottom-1/3 left-0 w-1/2"></div>
+                    <div id="touch-zone-right" class="touch-zone-btn top-1/3 bottom-1/3 right-0 w-1/2"></div>
+                </div>
+
                 <!-- In-Game HUD -->
                 <div id="game-hud" class="absolute top-2 left-2 right-2 sm:top-3 sm:left-3 sm:right-3 flex justify-between items-start pointer-events-none hidden font-orbitron z-20">
-                    <div class="flex flex-col gap-1 bg-gray-950/80 p-2 rounded border border-cyan-500/40 backdrop-blur">
+                    <div class="flex flex-col gap-1 bg-gray-950/80 p-2 rounded border border-cyan-500/40 backdrop-blur pointer-events-auto">
                         <div class="text-[9px] sm:text-[10px] text-gray-400 uppercase tracking-widest" data-i18n="score_lbl">Score</div>
                         <div id="hud-score" class="text-base sm:text-3xl font-black text-cyan-300">000000</div>
                         <div id="hud-combo-box" class="flex items-center gap-1 text-xs text-yellow-400 hidden">
@@ -252,13 +329,18 @@
                             <span id="hud-speed-val" class="font-bold text-cyan-400">1.0x</span>
                         </div>
                     </div>
-                    <div class="flex flex-col items-end gap-1 bg-gray-950/80 p-2 rounded border border-pink-500/40 backdrop-blur">
-                        <div class="text-[9px] sm:text-[10px] text-gray-400 uppercase tracking-widest" data-i18n="record">Record</div>
-                        <div id="hud-highscore" class="text-sm sm:text-xl font-bold text-pink-400">000000</div>
-                        <div class="w-20 sm:w-28 h-1.5 sm:h-2 bg-gray-900 rounded-full border border-cyan-500/50 overflow-hidden mt-1">
-                            <div id="hud-slomo-bar" class="h-full bg-gradient-to-r from-cyan-400 to-pink-500 w-full transition-all duration-75"></div>
+                    <div class="flex flex-col items-end gap-1.5 pointer-events-auto">
+                        <button id="btn-hud-pause" class="cyber-glass border border-cyan-400/50 px-3 py-1 rounded text-cyan-300 text-xs font-orbitron font-bold flex items-center gap-1 hover:border-cyan-300 transition active:scale-95 shadow">
+                            <span>⏸️</span> PAUSE
+                        </button>
+                        <div class="flex flex-col items-end gap-1 bg-gray-950/80 p-2 rounded border border-pink-500/40 backdrop-blur">
+                            <div class="text-[9px] sm:text-[10px] text-gray-400 uppercase tracking-widest" data-i18n="record">Record</div>
+                            <div id="hud-highscore" class="text-sm sm:text-xl font-bold text-pink-400">000000</div>
+                            <div class="w-20 sm:w-28 h-1.5 sm:h-2 bg-gray-900 rounded-full border border-cyan-500/50 overflow-hidden mt-1">
+                                <div id="hud-slomo-bar" class="h-full bg-gradient-to-r from-cyan-400 to-pink-500 w-full transition-all duration-75"></div>
+                            </div>
+                            <span class="text-[8px] sm:text-[9px] text-cyan-400 font-mono">SLOW-MO [SPACE]</span>
                         </div>
-                        <span class="text-[8px] sm:text-[9px] text-cyan-400 font-mono">SLOW-MO [SPACE]</span>
                     </div>
                 </div>
             </div>
@@ -274,11 +356,12 @@
                 <div class="w-full max-w-md flex flex-col gap-2 sm:gap-3">
                     <div>
                         <label class="block text-[10px] sm:text-[11px] font-orbitron tracking-widest mb-1 opacity-80" data-i18n="select_mode">SELECT SIMULATION MODE</label>
-                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-1.5 sm:gap-2">
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-1.5 sm:gap-2">
                             <button data-mode="classic" class="mode-btn cyber-btn bg-cyan-950/70 border border-cyan-500 text-cyan-300 p-1.5 sm:p-2 text-[10px] sm:text-xs font-orbitron font-bold rounded">CLASSIC</button>
+                            <button data-mode="portal" class="mode-btn cyber-btn bg-gray-900/70 border border-gray-700 text-gray-400 p-1.5 sm:p-2 text-[10px] sm:text-xs font-orbitron font-bold rounded">🌀 PORTAL</button>
                             <button data-mode="levels" class="mode-btn cyber-btn bg-gray-900/70 border border-gray-700 text-gray-400 p-1.5 sm:p-2 text-[10px] sm:text-xs font-orbitron font-bold rounded">LEVELS</button>
                             <button data-mode="overdrive" class="mode-btn cyber-btn bg-gray-900/70 border border-gray-700 text-gray-400 p-1.5 sm:p-2 text-[10px] sm:text-xs font-orbitron font-bold rounded">OVERDRIVE</button>
-                            <button data-mode="survival" class="mode-btn cyber-btn bg-gray-900/70 border border-gray-700 text-gray-400 p-1.5 sm:p-2 text-[10px] sm:text-xs font-orbitron font-bold rounded">SURVIVAL</button>
+                            <button data-mode="survival" class="mode-btn cyber-btn bg-gray-900/70 border border-gray-700 text-gray-400 p-1.5 sm:p-2 text-[10px] sm:text-xs font-orbitron font-bold rounded col-span-2 sm:col-span-2">SURVIVAL</button>
                         </div>
                     </div>
                     <div class="bg-gray-950/80 border border-yellow-500/40 p-2 sm:p-2.5 rounded-lg font-mono text-xs">
@@ -304,24 +387,33 @@
 
             <!-- Tutorial Modal -->
             <div id="modal-tutorial" class="screen-overlay absolute inset-0 z-40 flex flex-col items-center justify-center p-4 cyber-glass rounded-lg hidden">
-                <div class="w-full max-w-lg bg-gray-950/95 border border-purple-500/50 rounded-lg p-4 flex flex-col max-h-[90%] overflow-y-auto pointer-events-auto">
+                <div class="w-full max-w-lg bg-gray-950/95 border border-purple-500/50 rounded-2xl p-4 sm:p-5 flex flex-col max-h-[90%] overflow-y-auto pointer-events-auto shadow-2xl">
                     <div class="flex justify-between items-center mb-3 border-b border-purple-500/30 pb-2">
-                        <h3 class="text-base sm:text-lg font-bold font-orbitron text-purple-400">🎓 ACCADEMIA PILOTI - TUTORIAL</h3>
+                        <h3 class="text-base sm:text-lg font-bold font-orbitron text-purple-400">🎓 ACCADEMIA PILOTI - GUIDA RAPIDA</h3>
                         <button id="btn-close-tutorial" class="cyber-btn text-gray-400 hover:text-white font-bold text-xl px-2">&times;</button>
                     </div>
                     <div class="space-y-3 font-mono text-xs text-gray-200 pr-1">
-                        <div class="bg-gray-900/80 p-2.5 rounded border border-cyan-500/30">
-                            <h4 class="text-cyan-300 font-orbitron font-bold mb-1">1. MOVIMENTO E GUIDA</h4>
-                            <p>Usa i tasti freccia o WASD (oppure il D-pad touch moderno in basso su smartphone) per orientare la testa del serpentino sulla griglia.</p>
+                        <div class="bg-gray-900/80 p-2.5 rounded-xl border border-cyan-500/30">
+                            <h4 class="text-cyan-300 font-orbitron font-bold mb-1">1. MOVIMENTO & CONTROLLI</h4>
+                            <p>Il gioco adatta i controlli in base al tuo schermo: su smartphone usa lo <b>Swipe</b>, su tablet il <b>Touch 4-Zone</b> e su PC la tastiera (<b>WASD o Frecce</b>). Puoi sempre cambiare modalità nelle Impostazioni.</p>
                         </div>
-                        <div class="bg-gray-900/80 p-2.5 rounded border border-yellow-500/30">
-                            <h4 class="text-yellow-400 font-orbitron font-bold mb-1">2. CRESCITA E VITTORIA</h4>
-                            <p>Ogni mela/nodo mangiato allunga il tuo corpo di un blocco esatto. Se riesci a coprire ogni singolo slot della griglia senza schiantarti, completi la simulazione!</p>
+                        <div class="bg-gray-900/80 p-2.5 rounded-xl border border-yellow-500/30">
+                            <h4 class="text-yellow-400 font-orbitron font-bold mb-1">2. CRESCITA & RECORD</h4>
+                            <p>Raccogli i nodi energetici per allungare il corpo. Accumula serie veloci per attivare moltiplicatori di punteggio combo fino a 10x!</p>
                         </div>
-                        <div class="bg-gray-900/80 p-2.5 rounded border border-pink-500/30">
-                            <h4 class="text-pink-400 font-orbitron font-bold mb-1">3. POTERE SLOW-MO</h4>
-                            <p>Tieni premuta la <b>BARRA SPAZIATRICE</b> o il pulsante SLOW tondo per rallentare il tempo nei momenti di massima tensione.</p>
+                        <div class="bg-gray-900/80 p-2.5 rounded-xl border border-pink-500/30">
+                            <h4 class="text-pink-400 font-orbitron font-bold mb-1">3. SLOW-MO TATTICO</h4>
+                            <p>Tieni premuto il pulsante <b>SLOW</b> (o la <b>BARRA SPAZIATRICE</b> su PC) per rallentare il tempo nei passaggi stretti.</p>
                         </div>
+                    </div>
+
+                    <div id="tutorial-prematch-actions" class="mt-4 pt-3 border-t border-purple-500/20 flex flex-col sm:flex-row gap-2 font-orbitron text-xs">
+                        <button id="btn-tutorial-play-now" class="cyber-btn flex-1 py-2.5 bg-gradient-to-r from-cyan-500 to-pink-500 text-gray-950 font-bold rounded shadow hover:brightness-110">
+                            GIOCA ORA (SKIP)
+                        </button>
+                        <button id="btn-tutorial-dont-show" class="cyber-btn py-2.5 px-3 bg-gray-900 border border-gray-700 text-gray-300 font-bold rounded hover:border-gray-500">
+                            NON MOSTRARE PIÙ
+                        </button>
                     </div>
                 </div>
             </div>
@@ -329,10 +421,31 @@
             <!-- Pause Screen -->
             <div id="screen-pause" class="screen-overlay absolute inset-0 z-30 flex flex-col items-center justify-center p-4 cyber-glass rounded-lg hidden">
                 <h2 class="text-2xl sm:text-3xl font-black font-orbitron text-yellow-400 mb-4" data-i18n="paused_title">SIMULATION PAUSED</h2>
-                <div class="flex flex-col gap-3 w-56">
-                    <button id="btn-resume" class="cyber-btn w-full py-2.5 bg-cyan-500 text-gray-950 font-bold font-orbitron rounded" data-i18n="resume">RESUME</button>
-                    <button id="btn-restart-pause" class="cyber-btn w-full py-2.5 bg-pink-600 text-white font-bold font-orbitron rounded" data-i18n="restart">RESTART</button>
-                    <button id="btn-main-menu-pause" class="cyber-btn w-full py-2.5 bg-gray-800 border border-gray-600 text-gray-300 font-bold font-orbitron rounded" data-i18n="main_menu">MAIN MENU</button>
+                <div class="flex flex-col gap-3 w-64">
+                    <button id="btn-resume" class="cyber-btn w-full py-2.5 bg-cyan-500 text-gray-950 font-bold font-orbitron rounded shadow hover:brightness-110" data-i18n="resume">RESUME</button>
+                    <button id="btn-restart-pause" class="cyber-btn w-full py-2.5 bg-pink-600 text-white font-bold font-orbitron rounded shadow hover:brightness-110" data-i18n="restart">RESTART</button>
+                    <button id="btn-main-menu-pause" class="cyber-btn w-full py-2.5 bg-gray-900 border border-gray-700 text-gray-300 font-bold font-orbitron rounded hover:border-gray-500" data-i18n="main_menu">MAIN MENU</button>
+                </div>
+            </div>
+
+            <!-- Modal Avviso Abbandono Partita -->
+            <div id="modal-confirm-exit" class="screen-overlay absolute inset-0 z-50 flex flex-col items-center justify-center p-4 bg-black/80 backdrop-blur-md hidden">
+                <div class="w-full max-w-sm cyber-glass border border-red-500/50 rounded-2xl p-5 text-center flex flex-col items-center gap-3 shadow-2xl">
+                    <div class="w-12 h-12 rounded-full bg-red-950/80 border border-red-500 flex items-center justify-center text-xl text-red-400 mb-1">
+                        ⚠️
+                    </div>
+                    <h3 class="text-lg font-black font-orbitron text-red-400">ABBANDONARE LA PARTITA?</h3>
+                    <p class="text-xs font-mono text-gray-300 leading-relaxed">
+                        Tornando al Menu Principale tutti i progressi e il punteggio della partita corrente andranno <span class="text-red-400 font-bold">definitivamente persi</span>.
+                    </p>
+                    <div class="flex gap-2 w-full mt-2 font-orbitron text-xs">
+                        <button id="btn-confirm-exit-cancel" class="cyber-btn flex-1 py-2.5 bg-gray-800 text-gray-200 rounded font-bold hover:bg-gray-700">
+                            ANNULLA
+                        </button>
+                        <button id="btn-confirm-exit-ok" class="cyber-btn flex-1 py-2.5 bg-red-600 text-white rounded font-bold hover:bg-red-500 shadow-[0_0_15px_rgba(239,68,68,0.4)]">
+                            ABBANDONA
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -383,12 +496,12 @@
                     </div>
                     <div class="space-y-4 font-mono text-xs text-gray-200 pr-1">
                         <div class="bg-gray-900/80 p-3 rounded border border-cyan-500/30">
-                            <h4 class="text-cyan-300 font-orbitron font-bold text-sm mb-1" data-i18n="controls_title">🎮 COMANDI DI GIOCO</h4>
-                            <p class="text-gray-300" data-i18n="controls_desc">Usa le frecce o WASD. Tieni SPAZIO per attivare il rallentatore Slow-Mo. Premi P per la pausa.</p>
+                            <h4 class="text-cyan-300 font-orbitron font-bold text-sm mb-1" data-i18n="controls_title">🎮 SISTEMI DI CONTROLLO</h4>
+                            <p class="text-gray-300">Configurati automaticamente in base al tuo schermo (Smartphone = Swipe, Tablet = 4-Way Sides, PC = Tastiera WASD). Personalizzabili in qualsiasi momento nelle impostazioni!</p>
                         </div>
                         <div class="bg-gray-900/80 p-3 rounded border border-purple-500/30">
                             <h4 class="text-purple-300 font-orbitron font-bold text-sm mb-2" data-i18n="modes_title">🕹️ REGOLA DI CRESCITA & VITTORIA</h4>
-                            <p class="text-gray-300 mb-2">Ogni volta che il serpentino mangia un blocchetto, si allunga di un blocco. Se riempi interamente la griglia di gioco, completi la simulazione!</p>
+                            <p class="text-gray-300 mb-2">Ogni volta che il serpentino mangia un blocchetto, si allunga di un blocco. Nella modalità <b>PORTAL</b> puoi attraversare liberamente i muri riemergendo dal lato opposto!</p>
                         </div>
                     </div>
                 </div>
@@ -405,62 +518,147 @@
                 </div>
             </div>
 
-            <!-- Settings Modal -->
-            <div id="modal-settings" class="screen-overlay absolute inset-0 z-40 flex flex-col items-center justify-center p-4 cyber-glass rounded-lg hidden">
-                <div class="w-full max-w-lg bg-gray-950/95 border border-cyan-500/50 rounded-lg p-4 flex flex-col max-h-[90%] overflow-y-auto pointer-events-auto">
-                    <div class="flex justify-between items-center mb-3 border-b border-cyan-500/30 pb-2">
-                        <h3 class="text-base sm:text-lg font-bold font-orbitron text-cyan-300" data-i18n="settings_title">⚙️ SETTINGS & THEMES</h3>
-                        <button id="btn-close-settings" class="cyber-btn text-gray-400 hover:text-white font-bold text-xl px-2">&times;</button>
-                    </div>
+            <!-- Settings Modal con BARRA LATERALE A CATEGORIE -->
+            <div id="modal-settings" class="screen-overlay absolute inset-0 z-40 flex flex-col items-center justify-center p-2 sm:p-4 cyber-glass rounded-lg hidden">
+                <div class="w-full max-w-2xl bg-gray-950/95 border border-cyan-500/50 rounded-2xl p-3 sm:p-5 flex flex-col h-[90%] max-h-[580px] overflow-hidden pointer-events-auto shadow-2xl">
                     
-                    <div class="mb-3">
-                        <label class="block text-xs font-orbitron text-yellow-400 mb-1.5" data-i18n="lang_label">LANGUAGE / LINGUA</label>
-                        <div class="grid grid-cols-2 gap-2">
-                            <button data-lang="it" class="lang-btn cyber-btn p-2 rounded border border-cyan-500 bg-cyan-950 text-xs font-bold text-cyan-300">Italiano</button>
-                            <button data-lang="en" class="lang-btn cyber-btn p-2 rounded border border-gray-700 bg-gray-900 text-xs font-bold text-gray-400">English</button>
+                    <!-- Header Modal -->
+                    <div class="flex justify-between items-center border-b border-cyan-500/30 pb-2.5 mb-3">
+                        <div class="flex items-center gap-2">
+                            <h3 class="text-base sm:text-lg font-bold font-orbitron text-cyan-300" data-i18n="settings_title">⚙️ IMPOSTAZIONI</h3>
+                            <span id="detected-device-badge" class="text-[9px] bg-cyan-950 text-cyan-400 border border-cyan-500/40 px-2 py-0.5 rounded font-mono">DEVICE: AUTO</span>
                         </div>
+                        <button id="btn-close-settings" class="cyber-btn text-gray-400 hover:text-white font-bold text-2xl leading-none px-2">&times;</button>
                     </div>
 
-                    <div class="mb-3">
-                        <label class="block text-xs font-orbitron text-pink-400 mb-1.5" data-i18n="skin_label">🐍 SELECT SNAKE SKIN</label>
-                        <div id="skins-container" class="grid grid-cols-2 sm:grid-cols-5 gap-1.5 text-[11px]"></div>
-                    </div>
+                    <!-- Layout: Sidebar a sinistra + Contenuto a destra -->
+                    <div class="flex-1 flex flex-col sm:flex-row gap-3 min-h-0 overflow-hidden">
+                        
+                        <!-- Sidebar Categorie (Orizzontale su mobile piccolo, verticale a sinistra da sm in su) -->
+                        <aside class="w-full sm:w-44 flex sm:flex-col gap-1.5 overflow-x-auto sm:overflow-y-auto pb-1 sm:pb-0 sm:pr-1 border-b sm:border-b-0 sm:border-r border-gray-800/80 flex-shrink-0 font-orbitron text-xs">
+                            <button data-cat="tab-controls" class="settings-nav-btn active">
+                                <span>🕹️</span> <span>COMANDI</span>
+                            </button>
+                            <button data-cat="tab-graphics" class="settings-nav-btn">
+                                <span>🎨</span> <span>GRAFICA</span>
+                            </button>
+                            <button data-cat="tab-skin" class="settings-nav-btn">
+                                <span>🐍</span> <span>SKIN</span>
+                            </button>
+                            <button data-cat="tab-audio" class="settings-nav-btn">
+                                <span>🎶</span> <span>AUDIO</span>
+                            </button>
+                            <button data-cat="tab-lang" class="settings-nav-btn">
+                                <span>🌐</span> <span>LINGUA</span>
+                            </button>
+                        </aside>
 
-                    <div class="mb-3">
-                        <label class="block text-xs font-orbitron text-yellow-400 mb-1.5" data-i18n="themes_label">VISUAL THEMES ENGINE</label>
-                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-1.5">
-                            <button data-theme="cartoon" class="theme-select-btn cyber-btn p-2 rounded border border-sky-400 bg-sky-200 text-xs font-bold text-sky-900">🎨 CARTOON</button>
-                            <button data-theme="cyberpunk" class="theme-select-btn cyber-btn p-2 rounded border border-cyan-500 bg-cyan-950/80 text-xs font-bold text-cyan-300">CYBERPUNK</button>
-                            <button data-theme="retro" class="theme-select-btn cyber-btn p-2 rounded border border-gray-700 bg-gray-900 text-xs font-bold text-green-400">RETRO CRT</button>
-                            <button data-theme="minimal" class="theme-select-btn cyber-btn p-2 rounded border border-gray-700 bg-gray-200 text-xs font-bold text-gray-800">MINIMAL</button>
-                            <button data-theme="matrix" class="theme-select-btn cyber-btn p-2 rounded border border-gray-700 bg-black text-xs font-bold text-green-500">MATRIX</button>
-                            <button data-theme="cosmic" class="theme-select-btn cyber-btn p-2 rounded border border-gray-700 bg-purple-950 text-xs font-bold text-purple-300">COSMIC</button>
-                            <button data-theme="paper" class="theme-select-btn cyber-btn p-2 rounded border border-gray-700 bg-amber-50 text-xs font-bold text-gray-800">PAPER</button>
-                            <button data-theme="vaporwave" class="theme-select-btn cyber-btn p-2 rounded border border-gray-700 bg-pink-950 text-xs font-bold text-pink-300 col-span-2">VAPORWAVE</button>
-                        </div>
-                    </div>
-
-                    <div class="space-y-2.5 font-mono text-xs border-t border-gray-800 pt-3">
-                        <div class="flex flex-col gap-1.5 bg-gray-900/90 p-2 rounded border border-pink-500/30">
-                            <div class="flex justify-between items-center">
-                                <span class="text-pink-400 font-bold font-orbitron" data-i18n="jukebox_label">🎶 JUKEBOX PLAYLIST:</span>
-                                <button id="modal-music-toggle-btn" class="cyber-btn px-3 py-1 bg-pink-600 text-white font-bold rounded text-[11px]">MUSIC: ON</button>
+                        <!-- Pannelli Contenuto Categoria -->
+                        <div class="flex-1 overflow-y-auto pr-1">
+                            
+                            <!-- SEZIONE 1: COMANDI -->
+                            <div id="tab-controls" class="settings-tab-pane">
+                                <div class="settings-card">
+                                    <h4 class="text-xs font-orbitron text-cyan-300 font-bold mb-1.5 flex items-center gap-1.5">
+                                        <span>🕹️</span> MODALITÀ DI CONTROLLO ATTIVA
+                                    </h4>
+                                    <p class="text-[11px] font-mono text-gray-400 mb-3">Scegli come guidare la testa del serpentino in partita:</p>
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs font-mono">
+                                        <button data-control="swipe" class="control-scheme-btn p-2.5 rounded border border-gray-700 bg-gray-900 text-gray-400 font-bold text-left flex flex-col gap-0.5">
+                                            <span class="text-cyan-300 font-orbitron">1. SWIPE GESTURES</span>
+                                            <span class="text-[10px] text-gray-400 font-normal">Scorri il dito sul display</span>
+                                        </button>
+                                        <button data-control="zones" class="control-scheme-btn p-2.5 rounded border border-gray-700 bg-gray-900 text-gray-400 font-bold text-left flex flex-col gap-0.5">
+                                            <span class="text-cyan-300 font-orbitron">2. TOUCH SIDES (4-WAY)</span>
+                                            <span class="text-[10px] text-gray-400 font-normal">Tocca i 4 margini dello schermo</span>
+                                        </button>
+                                        <button data-control="dpad" class="control-scheme-btn p-2.5 rounded border border-gray-700 bg-gray-900 text-gray-400 font-bold text-left flex flex-col gap-0.5">
+                                            <span class="text-cyan-300 font-orbitron">3. PAD MINIMAL</span>
+                                            <span class="text-[10px] text-gray-400 font-normal">Pad direzionale touch 2026</span>
+                                        </button>
+                                        <button data-control="keyboard" class="control-scheme-btn p-2.5 rounded border border-gray-700 bg-gray-900 text-gray-400 font-bold text-left flex flex-col gap-0.5">
+                                            <span class="text-cyan-300 font-orbitron">4. TASTIERA PC</span>
+                                            <span class="text-[10px] text-gray-400 font-normal">WASD / Frecce + Spazio</span>
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
-                            <select id="select-track-playlist" class="bg-gray-950 text-cyan-300 border border-cyan-500/50 p-1.5 rounded font-mono text-xs w-full focus:outline-none pointer-events-auto">
-                                <option value="0">Track 1: Retro Arcade (Chiptune 8-bit)</option>
-                                <option value="1">Track 2: Cyber Darksynth (Industrial Sci-Fi)</option>
-                                <option value="2">Track 3: Vaporwave Chill (Ambient Synthwave)</option>
-                                <option value="3">Track 4: Toon Funk / Bounce (Playful Major)</option>
-                                <option value="4">Track 5: Matrix Industrial (High-BPM Techno)</option>
-                            </select>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <span data-i18n="bgm_vol">MUSIC VOLUME:</span>
-                            <input id="setting-bgm-vol" type="range" min="0" max="1" step="0.05" value="0.35" class="accent-pink-400 pointer-events-auto">
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <span data-i18n="sfx_vol">SFX VOLUME:</span>
-                            <input id="setting-sfx-vol" type="range" min="0" max="1" step="0.05" value="0.8" class="accent-cyan-400 pointer-events-auto">
+
+                            <!-- SEZIONE 2: GRAFICA -->
+                            <div id="tab-graphics" class="settings-tab-pane hidden">
+                                <div class="settings-card">
+                                    <h4 class="text-xs font-orbitron text-yellow-400 font-bold mb-1.5 flex items-center gap-1.5">
+                                        <span>🎨</span> MOTORE GRAFICO & TEMI VISIVI
+                                    </h4>
+                                    <p class="text-[11px] font-mono text-gray-400 mb-3">Seleziona lo stile estetico per l'interfaccia e la griglia:</p>
+                                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-[11px] font-orbitron font-bold">
+                                        <button data-theme="cartoon" class="theme-select-btn cyber-btn p-2 rounded border border-sky-400 bg-sky-200 text-sky-900">CARTOON</button>
+                                        <button data-theme="cyberpunk" class="theme-select-btn cyber-btn p-2 rounded border border-cyan-500 bg-cyan-950/80 text-cyan-300">CYBERPUNK</button>
+                                        <button data-theme="retro" class="theme-select-btn cyber-btn p-2 rounded border border-gray-700 bg-gray-900 text-green-400">RETRO CRT</button>
+                                        <button data-theme="minimal" class="theme-select-btn cyber-btn p-2 rounded border border-gray-700 bg-gray-200 text-gray-800">MINIMAL</button>
+                                        <button data-theme="matrix" class="theme-select-btn cyber-btn p-2 rounded border border-gray-700 bg-black text-green-500">MATRIX</button>
+                                        <button data-theme="cosmic" class="theme-select-btn cyber-btn p-2 rounded border border-gray-700 bg-purple-950 text-purple-300">COSMIC</button>
+                                        <button data-theme="paper" class="theme-select-btn cyber-btn p-2 rounded border border-gray-700 bg-amber-50 text-gray-800">PAPER</button>
+                                        <button data-theme="vaporwave" class="theme-select-btn cyber-btn p-2 rounded border border-gray-700 bg-pink-950 text-pink-300 col-span-2 sm:col-span-1">VAPORWAVE</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- SEZIONE 3: SKIN -->
+                            <div id="tab-skin" class="settings-tab-pane hidden">
+                                <div class="settings-card">
+                                    <h4 class="text-xs font-orbitron text-pink-400 font-bold mb-1.5 flex items-center gap-1.5">
+                                        <span>🐍</span> COLORAZIONE & SKIN DEL SERPENTE
+                                    </h4>
+                                    <p class="text-[11px] font-mono text-gray-400 mb-3">Personalizza il serpente con la skin cromatica che preferisci:</p>
+                                    <div id="skins-container" class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs font-mono"></div>
+                                </div>
+                            </div>
+
+                            <!-- SEZIONE 4: AUDIO -->
+                            <div id="tab-audio" class="settings-tab-pane hidden">
+                                <div class="settings-card space-y-3 font-mono text-xs">
+                                    <div class="flex justify-between items-center pb-2 border-b border-gray-800">
+                                        <span class="text-pink-400 font-bold font-orbitron flex items-center gap-1.5">
+                                            <span>🎶</span> STATO MUSICA
+                                        </span>
+                                        <button id="modal-music-toggle-btn" class="cyber-btn px-3 py-1 bg-pink-600 text-white font-bold rounded text-[11px]">MUSIC: ON</button>
+                                    </div>
+                                    <div>
+                                        <label class="block text-[11px] text-gray-400 mb-1">BRANO IN RIPRODUZIONE:</label>
+                                        <select id="select-track-playlist" class="bg-gray-950 text-cyan-300 border border-cyan-500/50 p-2 rounded font-mono text-xs w-full focus:outline-none pointer-events-auto">
+                                            <option value="0">Track 1: Neon Horizon (Synthwave)</option>
+                                            <option value="1">Track 2: Cyber Blade (Dark Electro)</option>
+                                            <option value="2">Track 3: Midnight Drift (Neo Chillwave)</option>
+                                            <option value="3">Track 4: Astral Pulse (Progressive Sci-Fi)</option>
+                                            <option value="4">Track 5: Deep Space Odyssey (Cinematic Synth)</option>
+                                        </select>
+                                    </div>
+                                    <div class="flex justify-between items-center pt-2">
+                                        <span class="text-gray-300">VOLUME MUSICA:</span>
+                                        <input id="setting-bgm-vol" type="range" min="0" max="1" step="0.05" value="0.35" class="accent-pink-400 pointer-events-auto">
+                                    </div>
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-gray-300">VOLUME EFFETTI SFX:</span>
+                                        <input id="setting-sfx-vol" type="range" min="0" max="1" step="0.05" value="0.8" class="accent-cyan-400 pointer-events-auto">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- SEZIONE 5: LINGUA -->
+                            <div id="tab-lang" class="settings-tab-pane hidden">
+                                <div class="settings-card">
+                                    <h4 class="text-xs font-orbitron text-yellow-400 font-bold mb-1.5 flex items-center gap-1.5">
+                                        <span>🌐</span> LINGUA / LANGUAGE
+                                    </h4>
+                                    <p class="text-[11px] font-mono text-gray-400 mb-3">Imposta la lingua dei testi e dell'interfaccia:</p>
+                                    <div class="grid grid-cols-2 gap-3 font-mono">
+                                        <button data-lang="it" class="lang-btn cyber-btn p-3 rounded-lg border border-cyan-500 bg-cyan-950 text-xs font-bold text-cyan-300 text-center">Italiano</button>
+                                        <button data-lang="en" class="lang-btn cyber-btn p-3 rounded-lg border border-gray-700 bg-gray-900 text-xs font-bold text-gray-400 text-center">English</button>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -479,9 +677,9 @@
         </main>
 
         <!-- Touch Controls Minimal & Moderni 2026 -->
-        <footer id="mobile-controls" class="w-full sm:hidden flex justify-between items-center px-6 z-30 mb-2">
-            <!-- Modern Minimal D-Pad -->
-            <div class="minimal-dpad">
+        <footer id="mobile-controls" class="w-full flex justify-between items-center px-6 z-30 mb-2">
+            <!-- 1. D-Pad Mode -->
+            <div id="wrapper-dpad" class="minimal-dpad">
                 <button id="btn-touch-up" class="minimal-btn minimal-btn-up" aria-label="Up">
                     <svg viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"></polyline></svg>
                 </button>
@@ -495,6 +693,19 @@
                 <button id="btn-touch-down" class="minimal-btn minimal-btn-down" aria-label="Down">
                     <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
                 </button>
+            </div>
+
+            <!-- 2. Virtual Joystick Mode -->
+            <div id="wrapper-joystick" class="hidden">
+                <div id="virtual-joystick-base">
+                    <div id="virtual-joystick-knob"></div>
+                </div>
+            </div>
+
+            <!-- 3 & 4. Info badge for Swipe, Zones or Keyboard modes -->
+            <div id="wrapper-gesture-info" class="hidden flex flex-col justify-center text-xs font-mono text-cyan-300/80 bg-gray-950/60 p-3 rounded-2xl border border-cyan-500/20 max-w-[170px]">
+                <span class="font-bold font-orbitron text-[10px]" id="gesture-mode-title">SWIPE GESTURES</span>
+                <span class="text-[9px] opacity-70" id="gesture-mode-desc">Scorri o tocca sul canvas per curvare.</span>
             </div>
 
             <!-- Modern Minimal Slow-Mo Module -->
@@ -543,7 +754,7 @@
                 sfx_vol: "VOLUME EFFETTI:",
                 shop_title: "🛒 NEGOZIO POTENZIAMENTI",
                 guide_title: "📖 GUIDA & REGOLE",
-                settings_title: "⚙️ IMPOSTAZIONI & TEMI",
+                settings_title: "⚙️ IMPOSTAZIONI",
                 controls_title: "🎮 COMANDI DI GIOCO",
                 controls_desc: "Usa le frecce o WASD. Tieni SPAZIO per attivare il rallentatore Slow-Mo. Premi P per la pausa.",
                 modes_title: "🕹️ REGOLA DI CRESCITA & VITTORIA",
@@ -582,7 +793,7 @@
                 sfx_vol: "SFX VOLUME:",
                 shop_title: "🛒 PERK UPGRADE SHOP",
                 guide_title: "📖 GUIDE & RULES",
-                settings_title: "⚙ SETTINGS & THEMES",
+                settings_title: "⚙️ SETTINGS",
                 controls_title: "🎮 GAME CONTROLS",
                 controls_desc: "Use arrow keys or WASD. Hold SPACEBAR to activate Slow-Mo. Press P to pause.",
                 modes_title: "🕹️ GROWTH & VICTORY RULE",
@@ -624,6 +835,20 @@
         let currentLang = 'it';
         let selectedSkin = 'cyber';
         let currentGridLevel = 20;
+        let controlScheme = 'swipe';
+        let dontShowTutorial = false;
+
+        function detectDeviceType() {
+            const ua = navigator.userAgent.toLowerCase();
+            const width = window.innerWidth;
+            const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+
+            if (!isTouch) return 'pc';
+            if (/(tablet|ipad|playbook|silk)|(android(?!.*mobi))/i.test(ua) || (width >= 768 && width <= 1280)) {
+                return 'tablet';
+            }
+            return 'smartphone';
+        }
 
         function initChallenges() {
             const saved = localStorage.getItem('snk2027_escalating_challenges');
@@ -685,9 +910,9 @@
             });
             document.querySelectorAll('.lang-btn').forEach(b => {
                 if (b.getAttribute('data-lang') === lang) {
-                    b.className = "lang-btn cyber-btn p-2 rounded border border-cyan-500 bg-cyan-950 text-xs font-bold text-cyan-300";
+                    b.className = "lang-btn cyber-btn p-3 rounded-lg border border-cyan-500 bg-cyan-950 text-xs font-bold text-cyan-300 text-center";
                 } else {
-                    b.className = "lang-btn cyber-btn p-2 rounded border border-gray-700 bg-gray-900 text-xs font-bold text-gray-400";
+                    b.className = "lang-btn cyber-btn p-3 rounded-lg border border-gray-700 bg-gray-900 text-xs font-bold text-gray-400 text-center";
                 }
             });
             localStorage.setItem('snk2027_lang', lang);
@@ -704,18 +929,84 @@
                 this.musicTimer = null;
                 this.step = 0;
                 this.currentTrackIndex = 0;
+                this.masterFilter = null;
+                
                 this.playlist = [
-                    { name: "1: Retro Arcade", stepMs: 140, wave: 'square', bassWave: 'triangle', melody: [261.63, 293.66, 329.63, 392.00, 440.00, 392.00, 329.63, 293.66], bass: [130.81, 130.81, 164.81, 164.81] },
-                    { name: "2: Cyber Darksynth", stepMs: 120, wave: 'sawtooth', bassWave: 'sawtooth', melody: [110.00, 110.00, 220.00, 110.00, 130.81, 110.00, 146.83, 130.81], bass: [55.00, 55.00, 55.00, 55.00] },
-                    { name: "3: Vaporwave Chill", stepMs: 220, wave: 'sine', bassWave: 'sine', melody: [329.63, 392.00, 493.88, 587.33, 493.88, 392.00, 329.63, 293.66], bass: [164.81, 164.81, 174.61, 174.61] },
-                    { name: "4: Toon Funk", stepMs: 130, wave: 'triangle', bassWave: 'square', melody: [329.63, 0, 392.00, 440.00, 0, 523.25, 440.00, 392.00], bass: [130.81, 0, 130.81, 164.81] },
-                    { name: "5: Matrix Industrial", stepMs: 100, wave: 'sawtooth', bassWave: 'sawtooth', melody: [146.83, 146.83, 293.66, 146.83, 164.81, 146.83, 174.61, 164.81], bass: [73.42, 73.42, 73.42, 73.42] }
+                    { 
+                        name: "1: Neon Horizon", 
+                        stepMs: 160, 
+                        cutoff: 1400,
+                        pads: [
+                            [220.00, 261.63, 329.63], 
+                            [174.61, 220.00, 261.63], 
+                            [196.00, 246.94, 293.66], 
+                            [146.83, 174.61, 220.00]  
+                        ],
+                        leads: [440, 523.25, 659.25, 523.25, 493.88, 392, 440, 329.63],
+                        bass: [55.00, 55.00, 43.65, 43.65, 49.00, 49.00, 36.71, 36.71]
+                    },
+                    { 
+                        name: "2: Cyber Blade", 
+                        stepMs: 135, 
+                        cutoff: 1800,
+                        pads: [
+                            [146.83, 174.61, 220.00], 
+                            [130.81, 164.81, 196.00], 
+                            [116.54, 146.83, 174.61], 
+                            [130.81, 164.81, 196.00]  
+                        ],
+                        leads: [293.66, 349.23, 440, 587.33, 523.25, 440, 349.23, 329.63],
+                        bass: [36.71, 36.71, 73.42, 36.71, 32.70, 32.70, 65.41, 32.70]
+                    },
+                    { 
+                        name: "3: Midnight Drift", 
+                        stepMs: 200, 
+                        cutoff: 950,
+                        pads: [
+                            [196.00, 246.94, 293.66, 369.99], 
+                            [164.81, 207.65, 246.94, 329.63], 
+                            [146.83, 185.00, 220.00, 293.66], 
+                            [164.81, 207.65, 246.94, 329.63]
+                        ],
+                        leads: [392.00, 440.00, 493.88, 587.33, 493.88, 440.00, 369.99, 329.63],
+                        bass: [49.00, 49.00, 41.20, 41.20, 36.71, 36.71, 41.20, 41.20]
+                    },
+                    { 
+                        name: "4: Astral Pulse", 
+                        stepMs: 145, 
+                        cutoff: 1600,
+                        pads: [
+                            [220.00, 277.18, 329.63], 
+                            [196.00, 246.94, 293.66], 
+                            [164.81, 207.65, 246.94], 
+                            [174.61, 220.00, 261.63]
+                        ],
+                        leads: [440, 554.37, 659.25, 440, 493.88, 587.33, 415.30, 440],
+                        bass: [55.00, 55.00, 49.00, 49.00, 41.20, 41.20, 43.65, 43.65]
+                    },
+                    { 
+                        name: "5: Deep Space Odyssey", 
+                        stepMs: 240, 
+                        cutoff: 800,
+                        pads: [
+                            [130.81, 196.00, 261.63, 311.13], 
+                            [116.54, 174.61, 233.08, 293.66], 
+                            [103.83, 155.56, 207.65, 261.63], 
+                            [116.54, 174.61, 233.08, 293.66]
+                        ],
+                        leads: [523.25, 466.16, 392.00, 349.23, 311.13, 349.23, 392.00, 466.16],
+                        bass: [32.70, 32.70, 29.14, 29.14, 25.96, 25.96, 29.14, 29.14]
+                    }
                 ];
             }
             init() {
                 if (!this.ctx) {
                     const AudioContext = window.AudioContext || window.webkitAudioContext;
                     this.ctx = new AudioContext();
+                    this.masterFilter = this.ctx.createBiquadFilter();
+                    this.masterFilter.type = 'lowpass';
+                    this.masterFilter.frequency.value = 1400;
+                    this.masterFilter.connect(this.ctx.destination);
                 }
                 if (this.ctx.state === 'suspended') { this.ctx.resume(); }
             }
@@ -723,24 +1014,36 @@
                 if (!this.ctx) return;
                 const osc = this.ctx.createOscillator();
                 const gain = this.ctx.createGain();
-                osc.type = isCartoon ? 'sine' : 'triangle';
-                osc.frequency.setValueAtTime(320 * pitchBoost, this.ctx.currentTime);
+                const filter = this.ctx.createBiquadFilter();
+                filter.type = 'lowpass';
+                filter.frequency.value = 3500;
+                osc.type = isCartoon ? 'sine' : 'sawtooth';
+                osc.frequency.setValueAtTime(440 * pitchBoost, this.ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(880 * pitchBoost, this.ctx.currentTime + 0.12);
                 gain.gain.setValueAtTime(0.2 * this.sfxVol, this.ctx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.1);
-                osc.connect(gain); gain.connect(this.ctx.destination);
-                osc.start(); osc.stop(this.ctx.currentTime + 0.1);
+                gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.12);
+                osc.connect(filter);
+                filter.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start(); osc.stop(this.ctx.currentTime + 0.12);
             }
             playCrash() {
                 if (!this.ctx) return;
                 const osc = this.ctx.createOscillator();
                 const gain = this.ctx.createGain();
+                const filter = this.ctx.createBiquadFilter();
+                filter.type = 'lowpass';
+                filter.frequency.setValueAtTime(800, this.ctx.currentTime);
+                filter.frequency.exponentialRampToValueAtTime(80, this.ctx.currentTime + 0.4);
                 osc.type = 'sawtooth';
-                osc.frequency.setValueAtTime(180, this.ctx.currentTime);
-                osc.frequency.linearRampToValueAtTime(30, this.ctx.currentTime + 0.35);
-                gain.gain.setValueAtTime(0.3 * this.sfxVol, this.ctx.currentTime);
-                gain.gain.linearRampToValueAtTime(0.01, this.ctx.currentTime + 0.35);
-                osc.connect(gain); gain.connect(this.ctx.destination);
-                osc.start(); osc.stop(this.ctx.currentTime + 0.35);
+                osc.frequency.setValueAtTime(140, this.ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(30, this.ctx.currentTime + 0.4);
+                gain.gain.setValueAtTime(0.35 * this.sfxVol, this.ctx.currentTime);
+                gain.gain.linearRampToValueAtTime(0.001, this.ctx.currentTime + 0.4);
+                osc.connect(filter);
+                filter.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start(); osc.stop(this.ctx.currentTime + 0.4);
             }
             startMusic() {
                 this.init();
@@ -752,20 +1055,65 @@
             scheduleNextStep() {
                 if (!this.isPlayingMusic) return;
                 const track = this.playlist[this.currentTrackIndex];
+                if (this.masterFilter) {
+                    this.masterFilter.frequency.setTargetAtTime(track.cutoff, this.ctx.currentTime, 0.2);
+                }
+
                 if (this.musicEnabled && this.bgmVol > 0) {
                     const now = this.ctx.currentTime;
-                    const noteFreq = track.melody[this.step % track.melody.length];
-                    if (noteFreq > 0) {
-                        const osc = this.ctx.createOscillator();
-                        const gain = this.ctx.createGain();
-                        osc.type = track.wave;
-                        osc.frequency.setValueAtTime(noteFreq, now);
-                        gain.gain.setValueAtTime(0.05 * this.bgmVol, now);
-                        gain.gain.exponentialRampToValueAtTime(0.001, now + (track.stepMs / 1000) * 0.9);
-                        osc.connect(gain); gain.connect(this.ctx.destination);
-                        osc.start(now); osc.stop(now + (track.stepMs / 1000));
+                    const dur = (track.stepMs / 1000);
+
+                    if (this.step % 4 === 0) {
+                        const chordIndex = Math.floor(this.step / 4) % track.pads.length;
+                        const chord = track.pads[chordIndex];
+                        chord.forEach(freq => {
+                            const osc = this.ctx.createOscillator();
+                            const gain = this.ctx.createGain();
+                            osc.type = 'sine';
+                            osc.frequency.setValueAtTime(freq, now);
+                            gain.gain.setValueAtTime(0.001, now);
+                            gain.gain.linearRampToValueAtTime(0.04 * this.bgmVol, now + dur * 0.8);
+                            gain.gain.exponentialRampToValueAtTime(0.001, now + dur * 3.8);
+                            osc.connect(gain);
+                            gain.connect(this.masterFilter);
+                            osc.start(now);
+                            osc.stop(now + dur * 4);
+                        });
+                    }
+
+                    const bassNote = track.bass[this.step % track.bass.length];
+                    if (bassNote > 0) {
+                        const bassOsc = this.ctx.createOscillator();
+                        const bassGain = this.ctx.createGain();
+                        const bassFilter = this.ctx.createBiquadFilter();
+                        bassFilter.type = 'lowpass';
+                        bassFilter.frequency.setValueAtTime(450, now);
+                        bassOsc.type = 'sawtooth';
+                        bassOsc.frequency.setValueAtTime(bassNote, now);
+                        bassGain.gain.setValueAtTime(0.07 * this.bgmVol, now);
+                        bassGain.gain.exponentialRampToValueAtTime(0.001, now + dur * 0.95);
+                        bassOsc.connect(bassFilter);
+                        bassFilter.connect(bassGain);
+                        bassGain.connect(this.masterFilter);
+                        bassOsc.start(now);
+                        bassOsc.stop(now + dur);
+                    }
+
+                    const leadNote = track.leads[this.step % track.leads.length];
+                    if (leadNote > 0 && Math.random() > 0.15) {
+                        const leadOsc = this.ctx.createOscillator();
+                        const leadGain = this.ctx.createGain();
+                        leadOsc.type = 'triangle';
+                        leadOsc.frequency.setValueAtTime(leadNote, now);
+                        leadGain.gain.setValueAtTime(0.035 * this.bgmVol, now);
+                        leadGain.gain.exponentialRampToValueAtTime(0.001, now + dur * 0.85);
+                        leadOsc.connect(leadGain);
+                        leadGain.connect(this.masterFilter);
+                        leadOsc.start(now);
+                        leadOsc.stop(now + dur);
                     }
                 }
+
                 this.step++;
                 this.musicTimer = setTimeout(() => this.scheduleNextStep(), track.stepMs);
             }
@@ -822,8 +1170,10 @@
             renderAchievements();
             renderDailyChallenges();
             setupControls();
+            setupMovementMethods();
             setupUIEvents();
             renderShop();
+            applyControlScheme(controlScheme);
             requestAnimationFrame(renderLoop);
 
             setTimeout(() => {
@@ -845,6 +1195,24 @@
             if (localStorage.getItem('snk2027_lvl')) userLevel = parseInt(localStorage.getItem('snk2027_lvl'), 10);
             if (localStorage.getItem('snk2027_highscore')) highScore = parseInt(localStorage.getItem('snk2027_highscore'), 10);
             if (localStorage.getItem('snk2027_skin')) selectedSkin = localStorage.getItem('snk2027_skin');
+            if (localStorage.getItem('snk2027_dont_show_tutorial')) dontShowTutorial = localStorage.getItem('snk2027_dont_show_tutorial') === 'true';
+
+            const savedControl = localStorage.getItem('snk2027_controls');
+            if (savedControl) {
+                controlScheme = savedControl;
+            } else {
+                const dev = detectDeviceType();
+                if (dev === 'smartphone') controlScheme = 'swipe';
+                else if (dev === 'tablet') controlScheme = 'zones';
+                else controlScheme = 'keyboard';
+            }
+
+            const deviceBadge = document.getElementById('detected-device-badge');
+            if (deviceBadge) {
+                const devName = detectDeviceType().toUpperCase();
+                deviceBadge.innerText = `DISPOSITIVO: ${devName}`;
+            }
+
             if (localStorage.getItem('snk2027_lang')) {
                 currentLang = localStorage.getItem('snk2027_lang');
                 setLanguage(currentLang);
@@ -882,6 +1250,8 @@
             localStorage.setItem('snk2027_highscore', highScore);
             localStorage.setItem('snk2027_skin', selectedSkin);
             localStorage.setItem('snk2027_lang', currentLang);
+            localStorage.setItem('snk2027_controls', controlScheme);
+            localStorage.setItem('snk2027_dont_show_tutorial', dontShowTutorial);
             localStorage.setItem('snk2027_recent', JSON.stringify(recentScores));
             localStorage.setItem('snk2027_ach', JSON.stringify(ACHIEVEMENTS_DEF));
             localStorage.setItem('snk2027_upgrades', JSON.stringify(UPGRADES_DEF));
@@ -956,8 +1326,8 @@
             container.innerHTML = '';
             SNAKE_SKINS.forEach(skin => {
                 const btn = document.createElement('button');
-                btn.className = `cyber-btn p-1.5 rounded border text-center font-bold transition ${selectedSkin === skin.id ? 'border-pink-500 bg-pink-950/60 text-pink-300 shadow' : 'border-gray-700 bg-gray-900 text-gray-400'}`;
-                btn.innerHTML = `<div class="w-3 h-3 rounded-full mx-auto mb-1" style="background:${skin.head}"></div>${skin.name}`;
+                btn.className = `cyber-btn p-2 rounded-lg border text-center font-bold transition flex flex-col items-center justify-center ${selectedSkin === skin.id ? 'border-pink-500 bg-pink-950/60 text-pink-300 shadow' : 'border-gray-700 bg-gray-900 text-gray-400'}`;
+                btn.innerHTML = `<div class="w-3.5 h-3.5 rounded-full mb-1 shadow-sm" style="background:${skin.head}"></div><span>${skin.name}</span>`;
                 btn.addEventListener('click', () => {
                     selectedSkin = skin.id;
                     saveGameData();
@@ -1009,15 +1379,109 @@
             });
         }
 
+        function tryTurn(x, y) {
+            audio.init();
+            if (gameState !== 'PLAYING') return;
+            if (x !== 0 && dir.x === 0) nextDir = { x, y: 0 };
+            if (y !== 0 && dir.y === 0) nextDir = { x: 0, y };
+        }
+
+        function applyControlScheme(scheme) {
+            controlScheme = scheme;
+            saveGameData();
+
+            const dpadWrapper = document.getElementById('wrapper-dpad');
+            const joystickWrapper = document.getElementById('wrapper-joystick');
+            const infoWrapper = document.getElementById('wrapper-gesture-info');
+            const touchZonesContainer = document.getElementById('touch-zones-container');
+            const infoTitle = document.getElementById('gesture-mode-title');
+            const infoDesc = document.getElementById('gesture-mode-desc');
+            const mobileControlsFooter = document.getElementById('mobile-controls');
+
+            dpadWrapper.classList.add('hidden');
+            joystickWrapper.classList.add('hidden');
+            infoWrapper.classList.add('hidden');
+            touchZonesContainer.style.display = 'none';
+
+            if (scheme === 'dpad') {
+                dpadWrapper.classList.remove('hidden');
+                mobileControlsFooter.style.display = 'flex';
+            } else if (scheme === 'swipe') {
+                infoWrapper.classList.remove('hidden');
+                infoTitle.innerText = "SWIPE GESTURES";
+                infoDesc.innerText = "Scorri il dito sulla griglia per curvare.";
+                mobileControlsFooter.style.display = 'flex';
+            } else if (scheme === 'zones') {
+                infoWrapper.classList.remove('hidden');
+                infoTitle.innerText = "TOUCH SIDES";
+                infoDesc.innerText = "Tocca i 4 lati del display per voltare.";
+                touchZonesContainer.style.display = 'block';
+                mobileControlsFooter.style.display = 'flex';
+            } else if (scheme === 'keyboard') {
+                const dev = detectDeviceType();
+                if (dev === 'pc') {
+                    mobileControlsFooter.style.display = 'none';
+                } else {
+                    infoWrapper.classList.remove('hidden');
+                    infoTitle.innerText = "TASTIERA WASD";
+                    infoDesc.innerText = "Usa WASD o Frecce per muoverti.";
+                    mobileControlsFooter.style.display = 'flex';
+                }
+            }
+
+            document.querySelectorAll('.control-scheme-btn').forEach(btn => {
+                if (btn.getAttribute('data-control') === scheme) {
+                    btn.className = "control-scheme-btn p-2.5 rounded border border-cyan-500 bg-cyan-950 text-cyan-300 font-bold text-left flex flex-col gap-0.5 shadow-[0_0_10px_rgba(0,240,255,0.2)]";
+                } else {
+                    btn.className = "control-scheme-btn p-2.5 rounded border border-gray-700 bg-gray-900 text-gray-400 font-bold text-left flex flex-col gap-0.5";
+                }
+            });
+        }
+
+        function setupMovementMethods() {
+            let touchStartX = 0, touchStartY = 0;
+            const canvasEl = document.getElementById('game-canvas');
+
+            canvasEl.addEventListener('touchstart', (e) => {
+                if (controlScheme !== 'swipe') return;
+                const touch = e.touches[0];
+                touchStartX = touch.clientX;
+                touchStartY = touch.clientY;
+            }, { passive: true });
+
+            canvasEl.addEventListener('touchend', (e) => {
+                if (controlScheme !== 'swipe') return;
+                const touch = e.changedTouches[0];
+                const deltaX = touch.clientX - touchStartX;
+                const deltaY = touch.clientY - touchStartY;
+                const minThreshold = 22;
+
+                if (Math.abs(deltaX) > Math.abs(deltaY)) {
+                    if (Math.abs(deltaX) > minThreshold) {
+                        tryTurn(deltaX > 0 ? 1 : -1, 0);
+                    }
+                } else {
+                    if (Math.abs(deltaY) > minThreshold) {
+                        tryTurn(0, deltaY > 0 ? 1 : -1);
+                    }
+                }
+            }, { passive: true });
+
+            document.getElementById('touch-zone-up').addEventListener('touchstart', (e) => { e.preventDefault(); tryTurn(0, -1); });
+            document.getElementById('touch-zone-down').addEventListener('touchstart', (e) => { e.preventDefault(); tryTurn(0, 1); });
+            document.getElementById('touch-zone-left').addEventListener('touchstart', (e) => { e.preventDefault(); tryTurn(-1, 0); });
+            document.getElementById('touch-zone-right').addEventListener('touchstart', (e) => { e.preventDefault(); tryTurn(1, 0); });
+        }
+
         function setupControls() {
             window.addEventListener('keydown', (e) => {
                 audio.init(); audio.startMusic();
                 if (gameState !== 'PLAYING') return;
                 switch (e.key) {
-                    case 'ArrowUp': case 'w': case 'W': if (dir.y === 0) nextDir = { x: 0, y: -1 }; break;
-                    case 'ArrowDown': case 's': case 'S': if (dir.y === 0) nextDir = { x: 0, y: 1 }; break;
-                    case 'ArrowLeft': case 'a': case 'A': if (dir.x === 0) nextDir = { x: -1, y: 0 }; break;
-                    case 'ArrowRight': case 'd': case 'D': if (dir.x === 0) nextDir = { x: 1, y: 0 }; break;
+                    case 'ArrowUp': case 'w': case 'W': tryTurn(0, -1); break;
+                    case 'ArrowDown': case 's': case 'S': tryTurn(0, 1); break;
+                    case 'ArrowLeft': case 'a': case 'A': tryTurn(-1, 0); break;
+                    case 'ArrowRight': case 'd': case 'D': tryTurn(1, 0); break;
                     case ' ': isSlowMoActive = true; break;
                     case 'p': case 'P': togglePause(); break;
                 }
@@ -1028,10 +1492,7 @@
                 const btn = document.getElementById(btnId);
                 const handleDir = (e) => {
                     e.preventDefault();
-                    audio.init();
-                    if (gameState !== 'PLAYING') return;
-                    if (x !== 0 && dir.x === 0) nextDir = { x, y: 0 };
-                    if (y !== 0 && dir.y === 0) nextDir = { x: 0, y };
+                    tryTurn(x, y);
                 };
                 btn.addEventListener('touchstart', handleDir, { passive: false });
                 btn.addEventListener('mousedown', handleDir);
@@ -1062,7 +1523,27 @@
         }
 
         function setupUIEvents() {
-            document.getElementById('btn-start-game').addEventListener('click', startNewGame);
+            // Avvio Partita con controllo sul Tutorial Pre-Match
+            document.getElementById('btn-start-game').addEventListener('click', () => {
+                if (!dontShowTutorial) {
+                    document.getElementById('modal-tutorial').classList.remove('hidden');
+                } else {
+                    startNewGame();
+                }
+            });
+
+            // Pulsanti Pre-Match Tutorial
+            document.getElementById('btn-tutorial-play-now').addEventListener('click', () => {
+                document.getElementById('modal-tutorial').classList.add('hidden');
+                startNewGame();
+            });
+
+            document.getElementById('btn-tutorial-dont-show').addEventListener('click', () => {
+                dontShowTutorial = true;
+                saveGameData();
+                document.getElementById('modal-tutorial').classList.add('hidden');
+                startNewGame();
+            });
             
             document.getElementById('btn-replay').addEventListener('click', (e) => {
                 e.stopPropagation();
@@ -1073,13 +1554,54 @@
                 showScreen('screen-main-menu');
             });
 
+            const handlePauseClick = (e) => {
+                e.stopPropagation();
+                audio.init();
+                togglePause();
+            };
+            document.getElementById('btn-hud-pause').addEventListener('click', handlePauseClick);
+            document.getElementById('btn-pause-header').addEventListener('click', handlePauseClick);
             document.getElementById('btn-resume').addEventListener('click', togglePause);
             document.getElementById('btn-restart-pause').addEventListener('click', () => { togglePause(); startNewGame(); });
-            document.getElementById('btn-main-menu-pause').addEventListener('click', () => { togglePause(); showScreen('screen-main-menu'); });
+
+            document.getElementById('btn-main-menu-pause').addEventListener('click', () => {
+                document.getElementById('modal-confirm-exit').classList.remove('hidden');
+            });
+
+            document.getElementById('btn-confirm-exit-cancel').addEventListener('click', () => {
+                document.getElementById('modal-confirm-exit').classList.add('hidden');
+            });
+
+            document.getElementById('btn-confirm-exit-ok').addEventListener('click', () => {
+                document.getElementById('modal-confirm-exit').classList.add('hidden');
+                document.getElementById('screen-pause').classList.add('hidden');
+                showScreen('screen-main-menu');
+            });
 
             document.querySelectorAll('.lang-btn').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     setLanguage(e.currentTarget.getAttribute('data-lang'));
+                });
+            });
+
+            document.querySelectorAll('.control-scheme-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    applyControlScheme(e.currentTarget.getAttribute('data-control'));
+                });
+            });
+
+            // Gestione Sidebar Navigazione Impostazioni
+            document.querySelectorAll('.settings-nav-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    document.querySelectorAll('.settings-nav-btn').forEach(b => b.classList.remove('active'));
+                    e.currentTarget.classList.add('active');
+
+                    const targetCat = e.currentTarget.getAttribute('data-cat');
+                    document.querySelectorAll('.settings-tab-pane').forEach(pane => {
+                        pane.classList.add('hidden');
+                    });
+                    const activePane = document.getElementById(targetCat);
+                    if (activePane) activePane.classList.remove('hidden');
                 });
             });
 
@@ -1169,11 +1691,11 @@
             document.getElementById('screen-pause').classList.add('hidden');
             document.getElementById('screen-game-over').classList.add('hidden');
             document.getElementById('game-hud').classList.add('hidden');
-            document.getElementById('btn-pause').classList.add('hidden');
+            document.getElementById('btn-pause-header').classList.add('hidden');
 
             if (screenId === 'PLAYING') {
                 document.getElementById('game-hud').classList.remove('hidden');
-                document.getElementById('btn-pause').classList.remove('hidden');
+                document.getElementById('btn-pause-header').classList.remove('hidden');
                 gameState = 'PLAYING';
             } else {
                 const target = document.getElementById(screenId);
@@ -1241,7 +1763,22 @@
 
         function updateGameLogic() {
             dir = { ...nextDir };
-            const head = { x: snake[0].x + dir.x, y: snake[0].y + dir.y };
+            let head;
+
+            if (gameMode === 'portal') {
+                const rawX = snake[0].x + dir.x;
+                const rawY = snake[0].y + dir.y;
+                head = {
+                    x: (rawX % gridCols + gridCols) % gridCols,
+                    y: (rawY % gridRows + gridRows) % gridRows
+                };
+            } else {
+                head = { x: snake[0].x + dir.x, y: snake[0].y + dir.y };
+                if (head.x < 0 || head.x >= gridCols || head.y < 0 || head.y >= gridRows) {
+                    triggerGameOver('BOUNDARY COLLISION', false);
+                    return;
+                }
+            }
 
             const slomoCapacityPerk = UPGRADES_DEF.find(u => u.id === 'slomo_dur').level;
             const slomoRechargePerk = UPGRADES_DEF.find(u => u.id === 'slomo').level;
@@ -1253,17 +1790,16 @@
                 slowMoEnergy = Math.min(maxEnergy, slowMoEnergy + (0.5 + slomoRechargePerk * 0.15));
             }
 
-            if (head.x < 0 || head.x >= gridCols || head.y < 0 || head.y >= gridRows) {
-                triggerGameOver('BOUNDARY COLLISION', false); return;
-            }
             for (let s of snake) {
                 if (s.x === head.x && s.y === head.y) {
                     triggerGameOver('SELF NEURAL LOOP COLLISION', false); return;
                 }
             }
             
-            trailParticles.unshift({ x: snake[0].x * cellSize + cellSize/2, y: snake[0].y * cellSize + cellSize/2, alpha: 0.7 });
-            if (trailParticles.length > 15) trailParticles.pop();
+            if (Math.abs(snake[0].x - head.x) <= 1 && Math.abs(snake[0].y - head.y) <= 1) {
+                trailParticles.unshift({ x: snake[0].x * cellSize + cellSize/2, y: snake[0].y * cellSize + cellSize/2, alpha: 0.7 });
+                if (trailParticles.length > 15) trailParticles.pop();
+            }
 
             let ateFood = false;
             foods.forEach((f, idx) => {
